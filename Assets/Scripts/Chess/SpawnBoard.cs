@@ -60,7 +60,6 @@ public class SpawnBoard : MonoBehaviour
     }
     void SetButton(int num)
     {
-        Debug.Log("arrivePawn" + " " + arrivePawn.turn);
         if(GameManager.deathStone[arrivePawn.turn - 1, num] > 0)
         {
             spawnChessStone.InitCreateStone(spawnChessStone.CreateStone(num),

@@ -14,6 +14,7 @@ public class ChessManager : StrategyBoardGame
     GameObject spawnPanel;
     SpawnChessStone spawnChessStone;
     Transform _transform;
+    public RaycastHit2D hit;
     public GameObject checkObject;
     float lastPos = 3.6f;
     float startPos = -3.6f;
@@ -24,47 +25,59 @@ public class ChessManager : StrategyBoardGame
     }
     
     void Update()
-    {        
+    {
         if(isGameOver) return;
+
         if (EventSystem.current.IsPointerOverGameObject()) // 어차피 흐름끝나고 여기로 올거임      ui위이고 alertbox가 솬되어 있다면 ui이벤트만 받겠다는거네
             return;
+        
         if(Input.GetMouseButtonDown(0))
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(mousePos,Vector3.forward);
+            hit = Physics2D.Raycast(mousePos,Vector3.forward);
             r = StaticVariable.GetStoneRowPosition(mousePos);
             c = StaticVariable.GetStoneColPosition(mousePos);
 
-            if(hit.collider != null)
+            // Life Cycle
+            if(checkObject == null) //  not select object
             {
-                if(checkObject == hit.collider.gameObject) // 같은 오브젝트 클릭
-                {
-                    UnCheckObject();
-                    // 만약 같은 오브젝트 클릭시 초기화를 원한다면 이 자리에 UnCheckObject(); 넣으면 됨
-                    FindEnableObject();
-                }
-                else // 다른 오브젝트 클릭
-                {
-                    UnCheckObject();
-                    CheckObject(hit);
-                    FindDisableObject(); // dot 경로에 있는 오브젝트의 collider를 false로 바꾸어 클릭 가능하게 함
-                }
+                SelectCycle();
             }
-            else // dot 또는 빈 오브젝트 클릭
+            else // select object
             {
-                if(AnalyzeBoard())
-                {
-                    MoveObject();
-                    FindEnableObject();  // init
-                    NextTurn();
-                }
-                UnCheckObject();
+                MoveCycle();
             }
-            DebugBoard();
+            DebugDeathStone();
         }
-    }    
-    void CheckObject(RaycastHit2D hit)
-    {        
+    }
+    void SelectCycle()
+    {
+        if(hit.collider == null) // hit 잡힌게 없다 리턴
+        {
+            return;
+        }
+        // 잡힌게 있다.. 하지만 같은 stone이 잡힐수도 있음으로 stone초기화후 다시 select
+        UnCheckObject();
+        CheckObject();
+        FindDisableObject();
+    
+    }
+    void MoveCycle()
+    {
+        if(hit.collider == null) // hit 잡힌게 없다 .. 로직 검사하여 movement 실행 후 초기화(common)
+        {
+            if(!AnalyzeBoard()) return;
+
+            MoveObject();
+            NextTurn();
+        }
+
+        FindEnableObject();
+        UnCheckObject();
+    }
+    
+    void CheckObject()
+    {
         if(turn != hit.collider.GetComponent<ChessStone>().turn) return;
 
         checkObject = hit.collider.gameObject;
@@ -85,13 +98,15 @@ public class ChessManager : StrategyBoardGame
     void MoveObject()
     {
         ChessStone stone = checkObject.GetComponent<ChessStone>();
-        Move(stone.m_row,stone.m_col,turn); //stone.turn); // board 로직 이동 // 요게 stone의 매개변수로 통해서 그렇구나..        
+        Move(stone.m_row, stone.m_col ,turn); //stone.turn); // board 로직 이동 // 요게 stone의 매개변수로 통해서 그렇구나..
         stone.m_row = r; stone.m_col = c; // stone의 r,c 변경
         stone.transform.position = new Vector2(xMidpos[c],yMidpos[r]); // world space 위치 변경
         PawnToAnyStone();
     }
     void PawnToAnyStone()
     {
+        if(isGameOver) return;
+
         if(checkObject.gameObject.name == "pawn")
         {
             if(r == 0 || r == 7)
@@ -110,7 +125,7 @@ public class ChessManager : StrategyBoardGame
         //Debug.Log(IsPossibleMove(r,c,turn) == (int)MoveKind.enemy);
         if(dotList.Count <= 0) return;
 
-        ChessStone[] stones = FindObjectsOfType<ChessStone>();       
+        ChessStone[] stones = FindObjectsOfType<ChessStone>();
         foreach(var _stone in stones)
         {
             foreach(var dot in dotList)
@@ -124,7 +139,7 @@ public class ChessManager : StrategyBoardGame
             }
         }
     }    
-    void FindEnableObject() // 다시 원상복귀 시키기
+    void FindEnableObject() // 다시 원상복귀 시키기 // 이것도 분리 시켜야 할듯
     {
         if(find_List.Count <= 0) return;
 
@@ -132,13 +147,14 @@ public class ChessManager : StrategyBoardGame
         {
             if(_list.m_row == r && _list.m_col == c) 
             {
-                Debug.Log("Destroy");
-                Attack(_list.m_num, _list.turn); // 이 리스트 때문에 그렇구나;;
+                //Debug.Log($"{_list.name} is Destroy");
+                Attack(_list.m_num); //, _list.turn); // 이 리스트 때문에 그렇구나;;
                 Destroy(_list.gameObject);
-            }            
+            }
             _list.GetComponent<Collider2D>().enabled = true;
         }
         find_List.Clear();
+        OnGameStop();
     }
     void InitBoard()
     {

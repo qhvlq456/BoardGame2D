@@ -4,9 +4,9 @@ using UnityEngine;
 using Res_2D_BoardGame;
 
 public class knight : ChessStone
-{        
+{
     // {TLL,BLL,TRR,BRR,TRR,TTL,TTR,BBL,BBR};
-    //int[,] direction = new int[,] {{-1,-2}, {1,-2}, {-1,2}, {1,2}, {-2,-1}, {-2,1}, {2,-1}, {2,1}};    
+    //int[,] direction = new int[,] {{-1,-2}, {1,-2}, {-1,2}, {1,2}, {-2,-1}, {-2,1}, {2,-1}, {2,1}};
     ChessManager GameManager;
     Animator _anim;    
     private void Start() {

@@ -150,13 +150,12 @@ namespace Res_2D_BoardGame
             SetBoardValue(prevR,prevC,0); // 전의 값 초기화
             SetBoardValue(r,c,_turn); // 이동할 현재의 값 set
         }
-        public void Attack(int stone, int _turn)
+        public void Attack(int stone)
         {
-            if(stone == 0) return;
-            if(IsPossibleMove(r,c,_turn) != (int)MoveKind.enemy) return;
-            
-            deathStone[_turn - 1 ,stone]++;
-            OnGameStop();
+            if(IsPossibleMove(r,c,turn) == (int)MoveKind.enemy)
+            {
+                deathStone[turn - 1 ,stone]++;
+            }
         }
         public int IsPossibleMove(int r, int c, int _turn)
         {
@@ -181,12 +180,13 @@ namespace Res_2D_BoardGame
         public abstract void OnGameStart(); // 이건 내 생각엔 virtual로 만들어도 될 것 같은뎅
         public virtual void OnGameStop() // 이 시점에서 isGameOver = false 와 turn의 값을 판단하여 누가 이겼는지 리턴        
         {
-            Debug.Log($"GameStop turn = {turn}");
+            Debug.Log($"First turn = {turn}");
             int enemy = (3 - turn) - 1; // 나중에 n인용 게임을 만들게 되면 3을 매개변수 또는 고정 값으로 만들어 변경,, deathstone배열도 변경
             if(deathStone[enemy,1] > 0)
             {
                 IsGameOver();
                 enemy += 1;
+                Debug.Log($"GameStop turn = {turn}");
                 Debug.Log($"{(enemy == 1 ? "black" : "white")} is victory!!"); // 임시
             }
         }
@@ -211,6 +211,7 @@ namespace Res_2D_BoardGame
     public abstract class ChessStone : Stone
     {
         public int m_num; // 고유넘버
+        public GameObject dotObject;
         public bool isCheck {get; private set;}
         public ChessStone()
         {
