@@ -37,20 +37,14 @@ public class King : ChessStone
         while(dirIdx < direction.GetLength(0))
         {
             sr += direction[dirIdx,0];
-            sc += direction[dirIdx,1];            
-            
-            if(GameManager.IsPossibleMove(sr,sc,turn) < 2)
+            sc += direction[dirIdx,1];
+
+            if(GameManager.IsPossibleMove(sr,sc,turn) >= 2)
             {
-                sr = m_row; sc = m_col;
-            }            
-            else
-            {
-                GameManager.list.Add(new KeyValuePair<int, int>(sr,sc));
-                if(GameManager.IsPossibleMove(sr,sc,turn) != 2)
-                {
-                    sr = m_row; sc = m_col;
-                }
+               GameManager.moveList.Add(new KeyValuePair<int, int>(sr,sc));
             }
+
+            sr = m_row; sc = m_col;
             dirIdx++;
         }
         // init

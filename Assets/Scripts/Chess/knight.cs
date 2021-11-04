@@ -32,27 +32,27 @@ public class knight : ChessStone
     {        
         // left-top 
         if (GameManager.IsPossibleMove(m_row - 1, m_col - 2, turn) >= 2) 
-            GameManager.list.Add(new KeyValuePair<int, int>(m_row - 1, m_col - 2));
+            GameManager.moveList.Add(new KeyValuePair<int, int>(m_row - 1, m_col - 2));
         // left-bottom        
         if (GameManager.IsPossibleMove(m_row + 1, m_col - 2, turn) >= 2) 
-            GameManager.list.Add(new KeyValuePair<int, int>(m_row + 1, m_col - 2));
+            GameManager.moveList.Add(new KeyValuePair<int, int>(m_row + 1, m_col - 2));
         // right-top        
         if ( GameManager.IsPossibleMove(m_row - 1, m_col + 2, turn) >= 2) 
-            GameManager.list.Add(new KeyValuePair<int, int>(m_row - 1, m_col + 2));
+            GameManager.moveList.Add(new KeyValuePair<int, int>(m_row - 1, m_col + 2));
         // right-bottom        
         if ( GameManager.IsPossibleMove(m_row + 1, m_col + 2, turn) >= 2) 
-            GameManager.list.Add(new KeyValuePair<int, int>(m_row + 1, m_col + 2));
+            GameManager.moveList.Add(new KeyValuePair<int, int>(m_row + 1, m_col + 2));
         // top-left        
         if (GameManager.IsPossibleMove(m_row - 2, m_col - 1, turn) >= 2) 
-            GameManager.list.Add(new KeyValuePair<int, int>(m_row - 2, m_col - 1));
+            GameManager.moveList.Add(new KeyValuePair<int, int>(m_row - 2, m_col - 1));
         // top-right        
         if (GameManager.IsPossibleMove(m_row - 2, m_col + 1, turn) >= 2) 
-            GameManager.list.Add(new KeyValuePair<int, int>(m_row - 2, m_col + 1));
+            GameManager.moveList.Add(new KeyValuePair<int, int>(m_row - 2, m_col + 1));
         // bottom-left        
         if ( GameManager.IsPossibleMove(m_row + 2, m_col - 1, turn) >= 2) 
-            GameManager.list.Add(new KeyValuePair<int, int>(m_row + 2, m_col - 1));
+            GameManager.moveList.Add(new KeyValuePair<int, int>(m_row + 2, m_col - 1));
         // bottom-right
         if ( GameManager.IsPossibleMove(m_row + 2, m_col + 1, turn) >= 2) 
-            GameManager.list.Add(new KeyValuePair<int, int>(m_row + 2, m_col + 1)); // -1,-2 안되는것들        
+            GameManager.moveList.Add(new KeyValuePair<int, int>(m_row + 2, m_col + 1)); // -1,-2 안되는것들        
     }   
 }

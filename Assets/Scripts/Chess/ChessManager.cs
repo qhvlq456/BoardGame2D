@@ -6,14 +6,17 @@ using Res_2D_BoardGame;
 
 public class ChessManager : StrategyBoardGame
 {
+    [Header("Position")]
     float[] xMidpos = new float[StaticVariable.chessBoardNum];
     float[] yMidpos = new float[StaticVariable.chessBoardNum];
     public List<GameObject> dotList = new List<GameObject>();
-    public List<ChessStone> find_List = new List<ChessStone>();    
+    public List<ChessStone> findList = new List<ChessStone>();
     GameObject dotObject;
     GameObject spawnPanel;
     SpawnChessStone spawnChessStone;
-    Transform _transform;
+    Transform parentTransform;
+
+    [Header("Object")]
     public RaycastHit2D hit;
     public GameObject checkObject;
     float lastPos = 3.6f;
@@ -39,6 +42,7 @@ public class ChessManager : StrategyBoardGame
             c = StaticVariable.GetStoneColPosition(mousePos);
 
             // Life Cycle
+
             if(checkObject == null) //  not select object
             {
                 SelectCycle();
@@ -60,18 +64,21 @@ public class ChessManager : StrategyBoardGame
         UnCheckObject();
         CheckObject();
         FindDisableObject();
-    
     }
     void MoveCycle()
     {
         if(hit.collider == null) // hit 잡힌게 없다 .. 로직 검사하여 movement 실행 후 초기화(common)
         {
             if(!AnalyzeBoard()) return;
-
-            MoveObject();
-            NextTurn();
+            // success analyze
+            FindAttackObject(); // 1. find search enemy
+            MoveObject(); // 2. move select object
+            OnGameStop(); // 3. Next turn previous Check Game Stop
+            PawnToAnyStone(); // etc.. Check pawn end line arrive
+            NextTurn(); // 4. if don't destroy enemy king nexturn else gameover
         }
-
+        
+        // init
         FindEnableObject();
         UnCheckObject();
     }
@@ -98,10 +105,9 @@ public class ChessManager : StrategyBoardGame
     void MoveObject()
     {
         ChessStone stone = checkObject.GetComponent<ChessStone>();
-        Move(stone.m_row, stone.m_col ,turn); //stone.turn); // board 로직 이동 // 요게 stone의 매개변수로 통해서 그렇구나..
+        Move(stone.m_row, stone.m_col); // board 로직 이동
         stone.m_row = r; stone.m_col = c; // stone의 r,c 변경
         stone.transform.position = new Vector2(xMidpos[c],yMidpos[r]); // world space 위치 변경
-        PawnToAnyStone();
     }
     void PawnToAnyStone()
     {
@@ -115,12 +121,12 @@ public class ChessManager : StrategyBoardGame
     }
     void CreateSpawnPanel()
     {
-        GameObject objSpawnPanel = Instantiate(spawnPanel,_transform);
+        GameObject objSpawnPanel = Instantiate(spawnPanel,parentTransform);
         spawnChessStone._vector = checkObject.transform.position; // 1. spawnmanager vector값 set
         objSpawnPanel.GetComponent<SpawnBoard>().arrivePawn = checkObject.GetComponent<Pawn>();
         // 3. spawnPanel의 arrivePawn을 적진에 도착한 pawn과 연결
     }
-    void FindDisableObject() // attack 클릭시 빈 오브젝트로 만들기 위해 콜라이더 false
+    void FindDisableObject() // Attack 클릭시 빈 오브젝트로 만들기 위해 콜라이더 false 이것도 나누어 만들어야 겠다
     {
         //Debug.Log(IsPossibleMove(r,c,turn) == (int)MoveKind.enemy);
         if(dotList.Count <= 0) return;
@@ -134,27 +140,33 @@ public class ChessManager : StrategyBoardGame
                 _stone.m_col == dot.GetComponent<Dot>().m_col)
                 {
                     _stone.GetComponent<Collider2D>().enabled = false;
-                    find_List.Add(_stone);
+                    findList.Add(_stone);
                 }
             }
         }
     }    
-    void FindEnableObject() // 다시 원상복귀 시키기 // 이것도 분리 시켜야 할듯
+    void FindEnableObject() // 다시 원상복귀 시키기
     {
-        if(find_List.Count <= 0) return;
+        if(findList.Count <= 0) return;
 
-        foreach(var _list in find_List)
+        foreach(var _list in findList)
+        {
+            _list.GetComponent<Collider2D>().enabled = true;
+        }
+        findList.Clear();
+    }
+
+    void FindAttackObject()
+    {
+        foreach(var _list in findList)
         {
             if(_list.m_row == r && _list.m_col == c) 
             {
                 //Debug.Log($"{_list.name} is Destroy");
-                Attack(_list.m_num); //, _list.turn); // 이 리스트 때문에 그렇구나;;
+                Attack(_list.m_num); // 이 리스트 때문에 그렇구나;;
                 Destroy(_list.gameObject);
             }
-            _list.GetComponent<Collider2D>().enabled = true;
         }
-        find_List.Clear();
-        OnGameStop();
     }
     void InitBoard()
     {
@@ -177,8 +189,8 @@ public class ChessManager : StrategyBoardGame
     }
     void CreateDot()
     {
-        //DebugList();
-        foreach(var _list in list)
+        DebugList();
+        foreach(var _list in moveList)
         {
             GameObject dot = Instantiate(dotObject,new Vector2(xMidpos[_list.Value],yMidpos[_list.Key]),Quaternion.identity);
             dot.GetComponent<Dot>().m_row = _list.Key;
@@ -206,7 +218,7 @@ public class ChessManager : StrategyBoardGame
         StaticVariable.InitXMidPos(xMidpos);
         StaticVariable.InitYMidPos(yMidpos);
 
-        _transform = GameObject.Find("Canvas").transform;
+        parentTransform = GameObject.Find("Canvas").transform;
         spawnChessStone = GetComponent<SpawnChessStone>();
         dotObject = Resources.Load("Chess/Dot") as GameObject;
         spawnPanel = Resources.Load("Chess/Spawn_Panel") as GameObject;

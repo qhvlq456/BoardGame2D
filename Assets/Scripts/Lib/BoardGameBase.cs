@@ -109,7 +109,7 @@ namespace Res_2D_BoardGame
     public abstract class StrategyBoardGame : BoardGameBase 
     {
         protected enum MoveKind {none,same,move,enemy}
-        public List<KeyValuePair<int,int>> list = new List<KeyValuePair<int, int>>(); // 체크한 돌 또는 오브젝트들이 갈 수 있는 방향
+        public List<KeyValuePair<int,int>> moveList = new List<KeyValuePair<int, int>>(); // 체크한 돌 또는 오브젝트들이 갈 수 있는 방향
         public int[,] deathStone {get;}
         public StrategyBoardGame()
         {
@@ -117,7 +117,7 @@ namespace Res_2D_BoardGame
         }
         public void DebugList()
         {
-            foreach(var i in list)
+            foreach(var i in moveList)
             {
                 Debug.Log($"Key(row) = {i.Key}, Value(col) = {i.Value}");
             }
@@ -145,16 +145,18 @@ namespace Res_2D_BoardGame
         */        
 
         // 나중에 _turn 그냥 turn으로 변경
-        public void Move(int prevR, int prevC, int _turn)
+        public void Move(int prevR, int prevC)
         {
             SetBoardValue(prevR,prevC,0); // 전의 값 초기화
-            SetBoardValue(r,c,_turn); // 이동할 현재의 값 set
+            SetBoardValue(r,c,turn); // 이동할 현재의 값 set
         }
         public void Attack(int stone)
         {
+            // check enemy destroy stone
             if(IsPossibleMove(r,c,turn) == (int)MoveKind.enemy)
             {
-                deathStone[turn - 1 ,stone]++;
+                int enemyTurn = 3 - turn;
+                deathStone[enemyTurn - 1 ,stone]++;
             }
         }
         public int IsPossibleMove(int r, int c, int _turn)
@@ -167,7 +169,7 @@ namespace Res_2D_BoardGame
         }        
         public bool AnalyzeBoard() // 이 분석이 각 stone마다 달라가지고..
         {
-            foreach(var _list in list)
+            foreach(var _list in moveList)
             {
                 if(_list.Key == r && _list.Value == c) return true;
             }
@@ -175,7 +177,7 @@ namespace Res_2D_BoardGame
         }
         public void ResetList()
         {
-            list.Clear();
+            moveList.Clear();
         }
         public abstract void OnGameStart(); // 이건 내 생각엔 virtual로 만들어도 될 것 같은뎅
         public virtual void OnGameStop() // 이 시점에서 isGameOver = false 와 turn의 값을 판단하여 누가 이겼는지 리턴        
@@ -199,7 +201,7 @@ namespace Res_2D_BoardGame
         public SpriteRenderer _renderer;
         public int m_row { get; set; }
         public int m_col { get; set; }
-        public int turn { get; set; }
+        public int turn; //{ get; set; }
         public int count { get; set; }
         public virtual void SetImageStone()
         {
@@ -211,7 +213,6 @@ namespace Res_2D_BoardGame
     public abstract class ChessStone : Stone
     {
         public int m_num; // 고유넘버
-        public GameObject dotObject;
         public bool isCheck {get; private set;}
         public ChessStone()
         {

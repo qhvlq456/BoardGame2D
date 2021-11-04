@@ -47,7 +47,7 @@ public class Queen : ChessStone
             }
             else
             {
-                GameManager.list.Add(new KeyValuePair<int, int>(sr,sc));
+                GameManager.moveList.Add(new KeyValuePair<int, int>(sr,sc));
                 if(GameManager.IsPossibleMove(sr,sc,turn) != 2)
                 {
                     sr = m_row; sc = m_col;

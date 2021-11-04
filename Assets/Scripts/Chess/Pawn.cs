@@ -22,7 +22,7 @@ public class Pawn : ChessStone
 
     private void Start() {
         SetPawn();
-    }    
+    }
     void SetPawn()
     {
         gameObject.name = "pawn";
@@ -76,22 +76,22 @@ public class Pawn : ChessStone
         {
             // white
             if(GameManager.IsPossibleMove(m_row + direction[(int)Dir.TL,0], m_col + direction[(int)Dir.TL,1],turn) == 3)
-                GameManager.list.Add(new KeyValuePair<int, int>
+                GameManager.moveList.Add(new KeyValuePair<int, int>
                 (m_row + direction[(int)Dir.TL,0], m_col + direction[(int)Dir.TL,1]));
 
             if(GameManager.IsPossibleMove(m_row + direction[(int)Dir.TR,0], m_col + direction[(int)Dir.TR,1],turn) == 3)
-                GameManager.list.Add(new KeyValuePair<int, int>
+                GameManager.moveList.Add(new KeyValuePair<int, int>
                 (m_row + direction[(int)Dir.TR,0], m_col + direction[(int)Dir.TR,1]));
         }
         else
         {
             // black 
             if(GameManager.IsPossibleMove(m_row + direction[(int)Dir.BL,0], m_col + direction[(int)Dir.BL,1],turn) == 3)
-                GameManager.list.Add(new KeyValuePair<int, int>
+                GameManager.moveList.Add(new KeyValuePair<int, int>
                 (m_row + direction[(int)Dir.BL,0], m_col + direction[(int)Dir.BL,1]));
 
             if(GameManager.IsPossibleMove(m_row + direction[(int)Dir.BR,0], m_col + direction[(int)Dir.BR,1],turn) == 3)
-                GameManager.list.Add(new KeyValuePair<int, int>
+                GameManager.moveList.Add(new KeyValuePair<int, int>
                 (m_row + direction[(int)Dir.BR,0], m_col + direction[(int)Dir.BR,1]));
         }
     }
@@ -101,14 +101,14 @@ public class Pawn : ChessStone
         {
             // white
             if(GameManager.IsPossibleMove(m_row + direction[(int)Dir.T,0], m_col,turn) == 2)
-                GameManager.list.Add(new KeyValuePair<int, int>
+                GameManager.moveList.Add(new KeyValuePair<int, int>
                 (m_row + direction[(int)Dir.T,0], m_col));
         }
         else
         {
             // black
             if(GameManager.IsPossibleMove(m_row + direction[(int)Dir.B,0], m_col,turn) == 2)
-                GameManager.list.Add(new KeyValuePair<int, int>
+                GameManager.moveList.Add(new KeyValuePair<int, int>
                 (m_row + direction[(int)Dir.B,0], m_col));
         }
     }
@@ -133,7 +133,7 @@ public class Pawn : ChessStone
             {                
                 if(GameManager.IsPossibleMove(m_row - i, m_col,turn) != 2) break;
                 else if (GameManager.IsPossibleMove(m_row - i, m_col,turn) == 2) 
-                GameManager.list.Add(new KeyValuePair<int, int>
+                GameManager.moveList.Add(new KeyValuePair<int, int>
                 (m_row - i, m_col));
             }
         }
@@ -144,7 +144,7 @@ public class Pawn : ChessStone
             {
                 if(GameManager.IsPossibleMove(m_row + i, m_col,turn) != 2) break;
                 else if (GameManager.IsPossibleMove(m_row + i, m_col,turn) == 2) 
-                GameManager.list.Add(new KeyValuePair<int, int>
+                GameManager.moveList.Add(new KeyValuePair<int, int>
                 (m_row + i, m_col));
             }
         }
