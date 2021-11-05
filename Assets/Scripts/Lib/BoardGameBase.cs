@@ -219,8 +219,8 @@ namespace Res_2D_BoardGame
         }
 
     }
-    // 그냥 여기에 정의를 다 해버렸네.. 재활용 안될것 같은데 .. 이걸 나눠야 될듯 strategyStone -> sequenceStone, UnsequenceStone
-    // 그다음 이걸 상속받고 뭐 해야 하냨ㅋㅋㅋ 이제 로직이 없는데 ㅋㅋㅋ 다른 효과들을 넣어야 되나
+    // 그냥 여기에 정의를 다 해버렸네.. 재활용 안될것 같은데 .. 이걸 나눠야 될듯 StrategyStone -> sequenceStone, UnsequenceStone
+    // 그다음 이걸 상속받고 뭐 해야 하냨ㅋㅋㅋ 이제 로직이 없는데 ㅋㅋㅋ 다른 효과들을 넣어야 되나 아 모르겠다 ~~ 
     public class ChessStone : Stone
     {
         protected enum MoveKind {none,same,move,enemy}
