@@ -6,56 +6,27 @@ using Res_2D_BoardGame;
 public class Queen : ChessStone
 {    
     // {T,B,L,R,TL,TR,BL,BR};
-    int[,] direction = new int[,] {{-1,0},{1,0},{0,-1},{0,1},{-1,-1},{-1,1},{1,-1},{1,1}};
-    int dirIdx = 0;
     ChessManager GameManager;
     Animator _anim;    
 
     private void Start() {
-        SetGame();
+        SetQueen();
     }    
-    void SetGame()
+    void SetQueen()
     {
         gameObject.name = "queen";
         GameManager = GameObject.Find("GameManager").GetComponent<ChessManager>();
-        _anim = GetComponent<Animator>();        
+        _anim = GetComponent<Animator>();
+        isSequence = true;
+        SetDirection('/',"top","bottom","left","right","top/left","top/right","bottom/left","bottom/right");
     }
     public override void IsCheck()
     {
         base.IsCheck();
         _anim.SetBool("isCheck",isCheck);
     }
-    public override void CheckMove()
-    {
-        DefaultMove();
-    }    
     // protected enum MoveKind {none,same,move,enemy}
     //                          0     1   2     3
     // sr, sc 원래 값으로 초기화 해줘야 함!
-    void DefaultMove()
-    {
-        int sr = m_row; int sc = m_col;
-        while(dirIdx < direction.GetLength(0))
-        {
-            sr += direction[dirIdx,0];
-            sc += direction[dirIdx,1];
-            
-            if(GameManager.IsPossibleMove(sr,sc,turn) < 2)
-            {
-                sr = m_row; sc = m_col;
-                dirIdx++;
-            }
-            else
-            {
-                GameManager.moveList.Add(new KeyValuePair<int, int>(sr,sc));
-                if(GameManager.IsPossibleMove(sr,sc,turn) != 2)
-                {
-                    sr = m_row; sc = m_col;
-                    dirIdx++;
-                }
-            }
-        }        
-        // init
-        dirIdx = 0;
-    }   
+    
 }

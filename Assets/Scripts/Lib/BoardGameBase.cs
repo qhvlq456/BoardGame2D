@@ -196,25 +196,15 @@ namespace Res_2D_BoardGame
 
     public class Stone : MonoBehaviour
     {
-        public enum StoneType { none, white, black }
+        // turn == 1 : white , 2 == black
         public Sprite[] _sprite;
         public SpriteRenderer _renderer;
-        public int m_row { get; set; }
-        public int m_col { get; set; }
-        public int turn; //{ get; set; }
-        public int count { get; set; }
-        public virtual void SetImageStone()
-        {
-            // 1. white, 2. black
-            _renderer.sprite = _sprite[turn - 1];
-        }
-
-    }    
-    public abstract class ChessStone : Stone
-    {
-        public int m_num; // 고유넘버
         public bool isCheck {get; private set;}
-        public ChessStone()
+        public int m_row;
+        public int m_col;
+        public int turn;
+        public int count;
+        public Stone()
         {
             isCheck = false;
         }
@@ -222,7 +212,114 @@ namespace Res_2D_BoardGame
         {
             isCheck = !isCheck;
         }
-        public abstract void CheckMove();
+        public virtual void SetImageStone()
+        {
+            // 1. white, 2. black
+            _renderer.sprite = _sprite[turn - 1];
+        }
+
+    }
+    // 그냥 여기에 정의를 다 해버렸네.. 재활용 안될것 같은데 .. 이걸 나눠야 될듯 strategyStone -> sequenceStone, UnsequenceStone
+    // 그다음 이걸 상속받고 뭐 해야 하냨ㅋㅋㅋ 이제 로직이 없는데 ㅋㅋㅋ 다른 효과들을 넣어야 되나
+    public class ChessStone : Stone
+    {
+        protected enum MoveKind {none,same,move,enemy}
+        public int m_num; // 고유넘버
+        public bool isSequence;
+        protected int dirIdx;
+        public int[,] searchdirection;
+        public delegate int possibleMove(int r, int c, int turn);
+
+        public ChessStone()
+        {
+            dirIdx = 0;
+        }
+        public void SetDirection(char subChar, params string[] dirStr)
+        {
+            searchdirection = new int[dirStr.Length,2];
+            foreach(var subStr in dirStr)
+            {
+                string[] subDir = subStr.Split(subChar);
+                SearchDirectionArray(subDir);
+            }
+            dirIdx = 0;
+        }
+        void SearchDirectionArray(string[] str)
+        {
+            foreach(var _str in str)
+            {
+                SetTempDir(_str);
+            }
+            dirIdx++;
+        }
+        void SetTempDir(string str)
+        {            
+            switch(str)
+            {
+                case "top" : 
+                searchdirection[dirIdx,0] += -1;
+                searchdirection[dirIdx,1] += 0;
+                    break;
+                case "bottom" :
+                searchdirection[dirIdx,0] += 1;
+                searchdirection[dirIdx,1] += 0;
+                    break;
+                case "left" :
+                searchdirection[dirIdx,0] += 0;
+                searchdirection[dirIdx,1] += -1;
+                    break;
+                case "right" :
+                searchdirection[dirIdx,0] += 0;
+                searchdirection[dirIdx,1] += 1;
+                    break;
+                default : break;
+            }
+        }
+        // 하 상수가 모호하네.. 통일을 하든가 리스트 복사하던가 생각해야됨
+        // 이건 연속성 있는 함수야..
+        public virtual void DefaultMove(possibleMove action, List<KeyValuePair<int,int>> possiblePos)
+        {
+            int sr = m_row; int sc = m_col;
+
+            while(dirIdx < searchdirection.GetLength(0))
+            {
+                sr += searchdirection[dirIdx,0];
+                sc += searchdirection[dirIdx,1];
+                
+                if(isSequence) SequenceLogic(ref sr, ref sc, action, possiblePos);
+                else UnSequenceLogic(ref sr, ref sc, action, possiblePos);
+            }        
+            // init
+            dirIdx = 0;
+        }
+        // 델리게이트 빈거 하나 만들어서 이 부분을 정의하여 새로운 스크립트에 박아둬야 되나;;
+        void SequenceLogic(ref int sr, ref int sc, possibleMove action, List<KeyValuePair<int,int>> possiblePos)
+        {
+            if(action(sr,sc,turn) < (int)MoveKind.move)
+            {
+                sr = m_row; sc = m_col;
+                dirIdx++;
+            }
+            else
+            {
+                possiblePos.Add(new KeyValuePair<int, int>(sr,sc));
+                if(action(sr,sc,turn) != (int)MoveKind.move)
+                {
+                    sr = m_row; sc = m_col;
+                    dirIdx++;
+                }
+            }
+        }
+        void UnSequenceLogic(ref int sr, ref int sc, possibleMove action, List<KeyValuePair<int,int>> possiblePos)
+        {
+            if(action(sr,sc,turn) >= (int)MoveKind.move)
+            {
+                possiblePos.Add(new KeyValuePair<int, int>(sr,sc));
+            }
+
+            sr = m_row; sc = m_col;
+            dirIdx++;
+        }
     }
     
 }

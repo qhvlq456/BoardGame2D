@@ -90,7 +90,9 @@ public class ChessManager : StrategyBoardGame
         checkObject = hit.collider.gameObject;
         
         checkObject.GetComponent<ChessStone>().IsCheck();
-        checkObject.GetComponent<ChessStone>().CheckMove();
+        // 결과 모호함
+        checkObject.GetComponent<ChessStone>().DefaultMove(IsPossibleMove,moveList);
+
         CreateDot();
     }
     void UnCheckObject()
@@ -189,7 +191,7 @@ public class ChessManager : StrategyBoardGame
     }
     void CreateDot()
     {
-        DebugList();
+        //DebugList();
         foreach(var _list in moveList)
         {
             GameObject dot = Instantiate(dotObject,new Vector2(xMidpos[_list.Value],yMidpos[_list.Key]),Quaternion.identity);

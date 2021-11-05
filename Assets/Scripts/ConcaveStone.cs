@@ -19,7 +19,7 @@ public class ConcaveStone : Stone
     public void SetTextColor()
     {        
         // 1. white = 1, 2. black = 2
-        if(turn == (int)StoneType.white)
+        if(turn == 1)
         {
             _text.color = Color.black;
         }
