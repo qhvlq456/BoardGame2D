@@ -217,6 +217,7 @@ namespace Res_2D_BoardGame
             // 1. white, 2. black
             _renderer.sprite = _sprite[turn - 1];
         }
+        
 
     }
     // 그냥 여기에 정의를 다 해버렸네.. 재활용 안될것 같은데 .. 이걸 나눠야 될듯 StrategyStone -> sequenceStone, UnsequenceStone

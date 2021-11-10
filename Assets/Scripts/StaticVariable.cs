@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class StaticVariable : MonoBehaviour
 {
+    public enum Gamekind{omok,othello,chess}
+    public static Gamekind gameKind;
     // omok
     public static int omokBoardNum= 17;
     public static int sequneceNum = 0;
