@@ -13,27 +13,33 @@ namespace Res_2D_BoardGame
     public class BoardGameBase : MonoBehaviour
     {
         int[,] board;
-        int row, col;
-        public int r { protected get; set; }
-        public int c { protected get; set; }
-        public int turn {get; private set; }
-        protected bool isGameOver { get; private set; }
+        int arrNum;
+        public int r,c;
+        public int turn; //{get; private set; }
+        public bool isGameOver; //{get; private set; }
         public BoardGameBase()
         {
-            turn = 2; // 나중에 매개변수로 people로 받아서 n인용 까지 만들어야겠다...
-            isGameOver = false;
+            isGameOver = true;
+            turn = 1;
         }
-        public void InitGame(int boardNum)
+        public void InitBoard(int boardNum)
         {
-            row = col = boardNum;
-            board = new int[row, col];
+            arrNum = boardNum;
+            board = new int[arrNum, arrNum];
         }
-
-        protected int GetBoardValue(int r, int c) // board pos value값을 리턴하여 logic을 구성하게 돕는다
+        public virtual void InitGame()
+        {
+            Array.Clear(board,0,board.Length);
+        }
+        public void SetRowCol(int r, int c)
+        {
+            this.r = r; this.c = c;
+        }
+        public int GetBoardValue(int r, int c) // board pos value값을 리턴하여 logic의 구성하게 돕는다
         {
             return board[r, c];
         }
-        protected void SetBoardValue(int r,int c, int value)
+        public void SetBoardValue(int r,int c, int value)
         {
             board[r, c] = value;
         }
@@ -41,18 +47,26 @@ namespace Res_2D_BoardGame
         {
             return board.GetLength(0);
         }
-        protected void IsGameOver()
+        public void GameStart()
+        {
+            isGameOver = false;
+            OnGameStart();
+        }
+        public void GameOver()
         {
             isGameOver = true;
+            OnGameStop();
         }
+        public virtual void OnGameStart(){}
+        public virtual void OnGameStop(){}        
         public void NextTurn() // 1인용인 경우 사용하지 않음 그만이라 가상함수로 정의하지 않음!
         {            
             turn = 3 - turn; // 2 > 1 > 2 > 1
         }
         public bool CheckOverValue(int r, int c) // row, col의 범위 값을 넘으면 false를 리턴함 .. length값이기 때문에 r >= row 하여야 함
         {
-            if (r >= row || r < 0) return false;
-            if (c >= col || c < 0) return false;
+            if (r >= arrNum || r < 0) return false;
+            if (c >= arrNum || c < 0) return false;
             return true;
         }
         public void DebugBoard()
@@ -77,6 +91,7 @@ namespace Res_2D_BoardGame
     */
     public abstract class SequenceBoardGame : BoardGameBase
     {
+        // turn == 1 : white , 2 == black
         // top, bottom, left, right, top-left, top-right, bottom-left, bottom-right
         protected enum SequenceDir { T, B, L, R, TL, TR, BL, BR }        
         protected Queue<int> sequenceQ;
@@ -84,9 +99,7 @@ namespace Res_2D_BoardGame
         public SequenceBoardGame()
         {
             sequenceQ = new Queue<int>();
-        }        
-        public abstract void OnGameStart();
-        public abstract void OnGameStop(); // 이 시점에서 isGameOver = false 와 turn의 값을 판단하여 누가 이겼는지 리턴        
+        }
         public bool IsEmpty()
         {
             if (GetBoardValue(r, c) != 0 || GetBoardValue(r,c) == turn) return false;
@@ -179,14 +192,13 @@ namespace Res_2D_BoardGame
         {
             moveList.Clear();
         }
-        public abstract void OnGameStart(); // 이건 내 생각엔 virtual로 만들어도 될 것 같은뎅
-        public virtual void OnGameStop() // 이 시점에서 isGameOver = false 와 turn의 값을 판단하여 누가 이겼는지 리턴        
+        public override void OnGameStop() // 이 시점에서 isGameOver = false 와 turn의 값을 판단하여 누가 이겼는지 리턴        
         {
             Debug.Log($"First turn = {turn}");
             int enemy = (3 - turn) - 1; // 나중에 n인용 게임을 만들게 되면 3을 매개변수 또는 고정 값으로 만들어 변경,, deathstone배열도 변경
             if(deathStone[enemy,1] > 0)
             {
-                IsGameOver();
+                GameOver();
                 enemy += 1;
                 Debug.Log($"GameStop turn = {turn}");
                 Debug.Log($"{(enemy == 1 ? "black" : "white")} is victory!!"); // 임시

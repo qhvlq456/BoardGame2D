@@ -14,11 +14,9 @@ public class SettingsUI : MonoBehaviourPunCallbacks
     [Header("InputField")]
     [SerializeField]
     InputField roomNameInput;
-
-    [Header("Room option")]
+    
     int type = -1;
     public byte maxPlayer = 2;
-
     public override void OnEnable() {
         base.OnEnable();
         SetButtonColor();
@@ -38,18 +36,18 @@ public class SettingsUI : MonoBehaviourPunCallbacks
     }
 
     #region Settings open n close
-    public void SettingsClose()
+    public void OnClickSettingsClose(bool value)
     {
-        StartCoroutine(SettingsCloseDelay());
+        StartCoroutine(SettingsCloseDelay(value));
     }
-    IEnumerator SettingsCloseDelay()
+    IEnumerator SettingsCloseDelay(bool value)
     {
         Animator anim = GetComponent<Animator>();
 
         anim.SetTrigger("close");
-
+        
         yield return new WaitForSeconds(0.5f); // close 시간 보장이구나
-        gameObject.SetActive(false); 
+        gameObject.SetActive(value);
         anim.ResetTrigger("close");
     }
     #endregion
@@ -58,9 +56,18 @@ public class SettingsUI : MonoBehaviourPunCallbacks
     public void CreateRoom()
     {
         if(string.IsNullOrEmpty(roomNameInput.text)) return;
-        else if(type <= -1) return;
-
-        PhotonNetwork.CreateRoom(roomNameInput.text,new RoomOptions{MaxPlayers = maxPlayer}, null);
+        else if(type <= -1) return;        
+        string gameKind = type == 0 ? "Omok" : type == 1 ? "Othello" : type == 2 ? "Chess" : "";
+       
+        PhotonNetwork.CreateRoom(roomNameInput.text,
+        new RoomOptions 
+        {
+            MaxPlayers = maxPlayer,
+            CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() {{"k",gameKind}},
+            CustomRoomPropertiesForLobby = new string[1] {"k"} // 엄청난 삽질이다 로비에 룸 커스텀 받으려면 스트링으로 키값 셋팅해놔야함
+        }
+        , null);
+        
     }
     public override void OnCreatedRoom()
     {

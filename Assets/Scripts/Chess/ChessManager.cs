@@ -214,9 +214,8 @@ public class ChessManager : StrategyBoardGame
         StaticVariable.startPos = startPos;
         StaticVariable.lastPos = lastPos;
         StaticVariable.interval = interval;
-        InitGame(StaticVariable.chessBoardNum);
-
-        InitBoard();
+        InitBoard(StaticVariable.chessBoardNum);
+        
         StaticVariable.InitXMidPos(xMidpos);
         StaticVariable.InitYMidPos(yMidpos);
 

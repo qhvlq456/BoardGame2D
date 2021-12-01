@@ -9,11 +9,9 @@ public class AppMenu : MonoBehaviour
     static string disconnectPanel = "DisconnectPanel";
     static string RobbyPanel = "RobbyPanel";
     static string Settings = "RoomSettings";
-    static string TempPanel = "TempPanel";
     static bool isDisconnect;
     static bool isRobby;
     static bool isSettings;
-    static bool isTemp;
     [MenuItem("BoardGame2D/Export BackUp", false, 0)]
     static void action01()
     {
@@ -55,9 +53,8 @@ public class AppMenu : MonoBehaviour
         parent.transform.Find(disconnectPanel).gameObject.SetActive(true);
         parent.transform.Find(RobbyPanel).gameObject.SetActive(true);
         parent.transform.Find(Settings).gameObject.SetActive(true);
-        parent.transform.Find(TempPanel).gameObject.SetActive(true);
 
-        isRobby = isDisconnect  = isSettings = isTemp = true;
+        isRobby = isDisconnect  = isSettings = true;
     } 
     [MenuItem("Lobby/All Panel false", false, 3)]
     static void AllPanelOff()
@@ -67,9 +64,8 @@ public class AppMenu : MonoBehaviour
         parent.transform.Find(disconnectPanel).gameObject.SetActive(false);
         parent.transform.Find(RobbyPanel).gameObject.SetActive(false);
         parent.transform.Find(Settings).gameObject.SetActive(false);
-        parent.transform.Find(TempPanel).gameObject.SetActive(false);
 
-        isRobby = isDisconnect  = isSettings = isTemp = false;
+        isRobby = isDisconnect  = isSettings = false;
     } 
     [MenuItem("Lobby/Init Panel",false, 4)]
     static void InitPanel()
@@ -79,10 +75,9 @@ public class AppMenu : MonoBehaviour
         parent.transform.Find(disconnectPanel).gameObject.SetActive(true);
         parent.transform.Find(RobbyPanel).gameObject.SetActive(false);
         parent.transform.Find(Settings).gameObject.SetActive(false);
-        parent.transform.Find(TempPanel).gameObject.SetActive(false);
 
         isDisconnect = true;
-        isRobby = isSettings = isTemp = false;
+        isRobby = isSettings = false;
     }
 
     [MenuItem("Lobby/RobbyPanel Switch", false, 15)]
@@ -112,16 +107,7 @@ public class AppMenu : MonoBehaviour
         parent.transform.Find(Settings).gameObject.SetActive(isSettings);
 
         CheckMark("Lobby/Settings Switch");
-    }
-    [MenuItem("Lobby/Temp Switch",false , 19)]
-    static void SwitchTempPanel()
-    {
-        GameObject parent = GameObject.Find("Canvas");
-        isTemp = !isTemp;
-        parent.transform.Find(TempPanel).gameObject.SetActive(isTemp);
-
-        CheckMark("Lobby/Temp Switch");
-    }
+    }    
     static void CheckMark(string path)
     {
         var @check = Menu.GetChecked(path);

@@ -40,6 +40,29 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - RpcUpdateText
+  - RpcInitGame
+  - RpcSetPlayerInfoText
+  - RpcGameStart
+  - RpcNextTurn
+  - RpcCreateStone
+  - RpcNext
+  - RpcSyncPlayer
+  - RpcResetPlayer
+  - RpcGameStop
+  - RpcGameOver
+  - RpcRetryGame
+  - RpcRetryButton
+  - RpcLeaveRoom
+  - RpcGameSceneLoad
+  - RpcGameManager
+  - RpcSyncButton
+  - CreatePlayerReadyUI
+  - RpcDestroyReadyUI
+  - RpcPlayerEnter
+  - RpcPlayerLeft
+  - RpcCreateChattingText
+  - SyncVariable
+  - RcpEnqueue
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

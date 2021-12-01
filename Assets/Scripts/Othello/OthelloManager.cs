@@ -115,13 +115,13 @@ public class OthelloManager : SequenceBoardGame
         _stone = Resources.Load("Stone") as GameObject;
         _result = Resources.Load("Result Panel") as GameObject;
         _transform = GameObject.Find("Canvas").transform;
-        InitGame(StaticVariable.othelloBoardNum);
+        InitBoard(StaticVariable.othelloBoardNum);        
         InitStone();
     }
 
     public override void OnGameStop()
     {
-        IsGameOver();
+        GameOver();
         Instantiate(_result, _transform);
     }
     void InitStone()

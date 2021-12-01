@@ -5,49 +5,13 @@ using Res_2D_BoardGame;
 
 public class OmokManager : SequenceBoardGame
 {
-    GameObject _stone;
     GameObject _result;
     Transform _transform;
-    Vector2 _vector;
     int m_Length = 4;
 
-    void Start()
+    void Awake()
     {
         OnGameStart();
-    }
-    
-    void Update()
-    {
-        if (isGameOver) return;
-
-        if(Input.GetMouseButtonDown(0))
-        {
-            Vector2 mousePos= Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            r = StaticVariable.OmokGetStoneColPosition(mousePos,ref _vector);
-            c = StaticVariable.OmokGetStoneRowPosition(mousePos,ref _vector);
-
-            if (r < 0 || c < 0) return;
-            // r,c 입력했다고 가정
-            if (!IsEmpty()) return;
-            CreateStone();
-            SetBoardValue(r, c, turn);
-            CheckDirection();
-            if (AnalyzeBoard()) OnGameStop();
-            else
-            {                
-                ResetLength();
-            }
-            if (!isGameOver) NextTurn();            
-        }
-    }
-      
-    void CreateStone()
-    {
-        GameObject stone = Instantiate(_stone, _vector, Quaternion.identity);
-        stone.GetComponent<ConcaveStone>().turn = turn;        
-        stone.GetComponent<ConcaveStone>().m_col = c;
-        stone.GetComponent<ConcaveStone>().m_row = r;
-        stone.GetComponent<Stone>().SetImageStone();
     }
     public override bool AnalyzeBoard()
     {
@@ -72,14 +36,12 @@ public class OmokManager : SequenceBoardGame
     }    
     public override void OnGameStart()
     {
-        _stone = Resources.Load("Stone") as GameObject;
         _result = Resources.Load("Result Panel") as GameObject;
         _transform = GameObject.Find("Canvas").transform;
-        InitGame(StaticVariable.omokBoardNum);
+        InitBoard(StaticVariable.omokBoardNum);
     }
     public override void OnGameStop()
     {
-        IsGameOver();
         Instantiate(_result, _transform);
     }
     public void ResetLength()
