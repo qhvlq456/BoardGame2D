@@ -14,35 +14,31 @@ public class RoomManager : MonoBehaviourPunCallbacks
 {
     Room room;
     string playerPath;
-    public bool isReady;
     public Text roomNameText;
     public Text playerInfoText;
-    Button gameStartBtn;
     Button backButton;
     [SerializeField]
     GameObject readyData;
     BoardGameBase GameManager;
     [SerializeField]
     SpawnManager spawnManager;
+    public List<ReadyData> readyList = new List<ReadyData>();
+
     
     private void Awake() {
         Debug.LogError("Retry?");
         SetManager();
-        InitGame(); // 아 retry때문에 이래야 됬구나;;
         roomNameText.text = $"Room Name : {room.Name}";
         photonView.RPC("RpcPlayerEnter",RpcTarget.AllViaServer);
     }
     void SetManager()
     {
-        isReady = false;
-
         roomNameText = GameObject.Find("RoomNameText").GetComponent<Text>();
         playerInfoText = GameObject.Find("PlayerInfoText").GetComponent<Text>();
         playerPath = "Network/Player";
 
         room = PhotonNetwork.CurrentRoom;
-
-        gameStartBtn = GameObject.Find("Canvas").transform.Find("GameMenu").Find("GameStartBtn").GetComponent<Button>();
+        
         backButton = GameObject.Find("Canvas").transform.Find("BackBtn").GetComponent<Button>();
         GameManager = GameObject.Find("GameManager").GetComponent<BoardGameBase>(); // omok, othello, chess 를 사용하기위해 클래스 다향성 사용
 
@@ -66,7 +62,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
         photonView.RPC("RpcPlayerLeft",RpcTarget.AllViaServer,otherPlayer.NickName);
-        InitGame();
         StartCoroutine(LeftPlayerRoutine(otherPlayer));
     }
     IEnumerator LeftPlayerRoutine(Photon.Realtime.Player other) // 여기도 scene load 다시해야함;;
@@ -91,23 +86,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer) // 나자신은 포함 안되는구나 ㅎ
     {
-        InitGame();
         roomNameText.text = $"Room Name : {room.Name}";
         photonView.RPC("RpcPlayerEnter",RpcTarget.AllViaServer);
     }
     #endregion
-
-    #region InitGame
-    public void InitGame()
-    {
-        photonView.RPC("RpcInitGame",RpcTarget.MasterClient); // master에게만 줘도 되는구나~ 어차피 master기준이라
-    }
-    [PunRPC]
-    public void RpcInitGame()
-    {
-        gameStartBtn.gameObject.SetActive(true);
-        gameStartBtn.interactable = PhotonNetwork.PlayerList.Length >= room.MaxPlayers;
-    }    
+    #region Enter and Left Player
     [PunRPC]
     void RpcPlayerEnter() // 현재 room에 존재하는 모든 player들의 이름을 가져와야 되는데ㅋㅋㅋ 내가 이걸 왜 rpc로 햇지라고 일단 생각 하엿음
     {
@@ -117,27 +100,44 @@ public class RoomManager : MonoBehaviourPunCallbacks
             var count = readys.Count(r => r.player.NickName == player.NickName);
             if(count > 0) continue;
 
-            ReadyData _readyUI = Instantiate(readyData,GameObject.Find("ReadyUI").transform.Find("Panel").transform.Find("ReadyObject")).GetComponent<ReadyData>();
-            _readyUI.SetPlayerText(player.NickName);
+            ReadyData _readyUI = 
+            Instantiate(readyData,GameObject.Find("ReadyUI").transform.Find("Panel").transform.Find("ReadyObject")).GetComponent<ReadyData>();
+            readyList.Add(_readyUI);
+
             _readyUI.player = player;
         }                
     }
     [PunRPC]
     void RpcPlayerLeft(string name)
     {
-        var readys = FindObjectsOfType<ReadyData>();
-        
-        foreach(var ready in readys)
+        foreach(var ready in readyList)
         {
             if(ready.player.NickName == name)
             {
+                readyList.Remove(ready);
                 Destroy(ready.gameObject);
                 break;
             }
         }
     }
     #endregion
-
+    #region Player Ready
+    public void ReadyPlayer(string name,bool value)
+    {
+        photonView.RPC("RpcReadyPlayer",RpcTarget.AllViaServer,name,value);
+    }
+    [PunRPC]
+    void RpcReadyPlayer(string name, bool value)
+    {
+        foreach(var ready in readyList)
+        {
+            if(ready.player.NickName == name)
+            {
+                ready.isReady = value;
+            }
+        }
+    }
+    #endregion
     #region GameStartButtonEvent
     public void GameStart()
     {
@@ -145,17 +145,24 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     [PunRPC]
     void RpcGameStart()
-    {        
-        if(PhotonNetwork.IsMasterClient) // master client는 초기화작업
-        {
-            gameStartBtn.interactable = false;
-            gameStartBtn.gameObject.SetActive(false);
-        }
-
+    {
         GameManager.GameStart();
         backButton.interactable = GameManager.isGameOver; // 나가지 못하게 만들기
     }
     #endregion
+
+    #region GameStop..
+    public void GameStop()
+    {
+
+    }
+    [PunRPC]
+    public void RpcGameStop()
+    {
+
+    }
+    #endregion
+
     #region GameStop .. GameScene Reload
     public void GameSceneLoad() // 이게 해결 방법이 없는데..
     {
