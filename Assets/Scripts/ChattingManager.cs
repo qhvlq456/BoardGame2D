@@ -49,7 +49,7 @@ public class ChattingManager : MonoBehaviour
 
         while(chattingButton.gameObject.activeSelf)
         {
-            chattingButton.image.color = Color.Lerp(Color.clear,Color.green,Mathf.PingPong(Time.time * 2,1));
+            chattingButton.image.color = Color.Lerp(Color.white,Color.green,Mathf.PingPong(Time.time * 2,1));
             yield return null;
         }
 
@@ -60,7 +60,7 @@ public class ChattingManager : MonoBehaviour
             yield return null;
         }
 
-        chattingButton.image.color = Color.clear;
+        chattingButton.image.color = Color.white;
     }
     public void OnClickEnterButton()
     {

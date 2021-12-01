@@ -94,10 +94,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void RpcPlayerEnter() // 현재 room에 존재하는 모든 player들의 이름을 가져와야 되는데ㅋㅋㅋ 내가 이걸 왜 rpc로 햇지라고 일단 생각 하엿음
     {
-        var readys = FindObjectsOfType<ReadyData>().ToList();
+        Debug.LogError($"player length = {PhotonNetwork.PlayerList.Length}");
+
         foreach(var player in PhotonNetwork.PlayerList)
         {
-            var count = readys.Count(r => r.player.NickName == player.NickName);
+            var count = readyList.Count(r => r.player.NickName == player.NickName);
             if(count > 0) continue;
 
             ReadyData _readyUI = 
@@ -151,32 +152,29 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
     #endregion
 
-    #region GameStop..
-    public void GameStop()
-    {
-
-    }
-    [PunRPC]
-    public void RpcGameStop()
-    {
-
-    }
-    #endregion
-
     #region GameStop .. GameScene Reload
-    public void GameSceneLoad() // 이게 해결 방법이 없는데..
+    public void SceneLoadValue()
     {
-        if(!GameManager.isGameOver) return; 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        //photonView.RPC("RpcGameSceneLoad",RpcTarget.AllViaServer);
+        StartCoroutine(SceneLoad());
+
+        photonView.RPC("RpcSceneLoadValue",RpcTarget.All);
     }
     [PunRPC]
-    void RpcGameSceneLoad()
+    void RpcSceneLoadValue()
     {
-        Debug.LogError("what");
+        ++StaticVariable.practiceSceneLoadNum;
+    }
+    IEnumerator SceneLoad() // rpc도 아닌데 잘 되네?
+    {
+        while(StaticVariable.practiceSceneLoadNum < room.PlayerCount)
+        {
+            yield return null;
+        }
+        StaticVariable.practiceSceneLoadNum = 0;
+
+        //PhotonNetwork.LoadLevel(SceneManager.GetActiveScene().name);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     #endregion
-
 
 }

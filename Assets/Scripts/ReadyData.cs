@@ -7,14 +7,18 @@ public class ReadyData : MonoBehaviour
 {
     public Photon.Realtime.Player player;
     public bool isReady;
+    RoomManager roomManager;
 
     [SerializeField]
     Text playerNameText;
     [SerializeField]
     Button readyButton;
+    bool isMasterValue;
 
     private void Awake() {
         isReady = false;
+        isMasterValue = false;
+        roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
     }    
     private void Start() {
         StartCoroutine(SetPlayerVisibleButton());
@@ -27,31 +31,37 @@ public class ReadyData : MonoBehaviour
     void OnClickReady()
     {
         if(!player.IsLocal) return;
+        
+        IsMasterGameStart();
 
-        var manager = FindObjectOfType<RoomManager>();
-        bool value = true;
-
-        foreach(var ready in manager.readyList)
+        if(player.IsMasterClient && isMasterValue && roomManager.readyList.Count >= PhotonNetwork.CurrentRoom.MaxPlayers)
         {
-            if(!ready.player.IsMasterClient) 
-            {
-                if(!ready.isReady)
-                {
-                    value = ready.isReady;
-                    break;
-                }        
-            }
-        }
-        if(player.IsMasterClient && value && manager.readyList.Count >= PhotonNetwork.CurrentRoom.MaxPlayers)
-        {
-            manager.GameStart();
+            roomManager.GameStart();
         }
         else
         {
             if(player.IsMasterClient) return;
         }
         isReady = !isReady;
-        manager.ReadyPlayer(player.NickName,isReady);
+        roomManager.ReadyPlayer(player.NickName,isReady);
+    }
+    void IsMasterGameStart()
+    {
+        if(!player.IsMasterClient) return;
+
+        isMasterValue = true;
+        
+        foreach(var ready in roomManager.readyList)
+        {
+            if(!ready.player.IsMasterClient) 
+            {
+                if(!ready.isReady)
+                {
+                    isMasterValue = ready.isReady;
+                    break;
+                }        
+            }
+        }
     }
     IEnumerator SetPlayerVisibleButton()
     {
@@ -65,11 +75,21 @@ public class ReadyData : MonoBehaviour
             else 
                 SetPlayerText(string.Format("{0}",player.NickName));
 
-            if(player.IsLocal)
-                readyButton.image.color = Color.Lerp(Color.clear,new Color(0.75f,0.75f,0.75f,1),Mathf.PingPong(Time.time, 1));
+            IsMasterGameStart();
+
+            if(player.IsLocal && !player.IsMasterClient)
+            {
+                readyButton.image.color = Color.Lerp(Color.clear,new Color(0.95f,0.95f,0.95f,1),Mathf.PingPong(Time.time, 1));
+            }
+            else if(player.IsLocal && player.IsMasterClient && isMasterValue && 
+            roomManager.readyList.Count >= PhotonNetwork.CurrentRoom.MaxPlayers)
+            {
+                readyButton.image.color = Color.Lerp(Color.clear,new Color(0.95f,0.75f,0.45f,1),Mathf.PingPong(Time.time, 1));
+            }
 
             if(isReady)
                 readyButton.image.color = Color.green;
+            
             yield return null;
         }
     }

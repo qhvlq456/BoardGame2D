@@ -17,8 +17,8 @@ public class StaticVariable : MonoBehaviour
     public static int othelloBoardNum = 8;
     // chess
     public static int chessBoardNum = 8;
-    // practice
-    public static int practiceTurn = 2;
+    // practice    
+    public static int practiceSceneLoadNum = 0;
 
     // 나중에 이것도 바꿔야겠다 모든 pos값 하나의 함수로 다 되게
     // omok

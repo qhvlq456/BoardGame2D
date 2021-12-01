@@ -22,8 +22,7 @@ public class Result : MonoBehaviourPun
     private void Start() {
     }
     void SetResult()
-    {        
-        PhotonNetwork.IsMessageQueueRunning = false;
+    { 
 
         GameManager = GameObject.Find("GameManager").GetComponent<SequenceBoardGame>();
         titleText = GameObject.Find("Title Text").GetComponent<Text>();
@@ -37,6 +36,7 @@ public class Result : MonoBehaviourPun
         confirmButton.onClick.AddListener(() => 
         {
             Debug.Log("OK");
+            roomManager.SceneLoadValue();
             Destroy(gameObject);
         });
     }
@@ -46,4 +46,6 @@ public class Result : MonoBehaviourPun
         bodyText.text = $"Victory {(GameManager.turn == 1 ? "White" : "Black")}";
     }
     // 승패를 턴으로 알수 있다 raise event나 써볼가? 나쁘지 않은거 같은뎅
+    
 }
+

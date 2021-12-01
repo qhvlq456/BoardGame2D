@@ -26,8 +26,8 @@ public class AlertUI : MonoBehaviour
                 break;
         }
     }
-    void Update() {
-        if(animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f) // 1보다 크거나 같으면 에니메이터 시간 종료
-            Destroy(gameObject);
+    public void DestroyAlert()
+    {
+        Destroy(gameObject);
     }
 }
