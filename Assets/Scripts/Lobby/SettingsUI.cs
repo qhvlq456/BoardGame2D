@@ -7,6 +7,7 @@ using Photon.Realtime;
 
 public class SettingsUI : MonoBehaviourPunCallbacks
 {
+    string playerPath;
     [Header("GameKind Button")]
     [SerializeField]
     Button[] buttons;
@@ -74,8 +75,9 @@ public class SettingsUI : MonoBehaviourPunCallbacks
         if(PhotonNetwork.IsMasterClient) // master client에서만 load scene 사용가능
         {
             Debug.LogError($"Load Scene   gamekind = {type + 1}");
-            PhotonNetwork.LoadLevel(type + 1);
-        }   
+            //PhotonNetwork.LoadLevel(type + 1);
+            PhotonNetwork.LoadLevel("Room");
+        }
     }
     #endregion
 }

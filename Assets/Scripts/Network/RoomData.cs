@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class RoomData : MonoBehaviour
+public class RoomData : MonoBehaviourPun
 {    
     [SerializeField]
     Text titleText;

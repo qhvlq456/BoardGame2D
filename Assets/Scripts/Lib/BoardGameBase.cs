@@ -19,7 +19,7 @@ namespace Res_2D_BoardGame
         public bool isGameOver; //{get; private set; }
         public BoardGameBase()
         {
-            isGameOver = true;
+            isGameOver = false;
             turn = 1;
         }
         public void InitBoard(int boardNum)
@@ -49,7 +49,7 @@ namespace Res_2D_BoardGame
         }
         public void GameStart()
         {
-            isGameOver = false;
+            //isGameOver = false;
             OnGameStart();
         }
         public void GameOver()

@@ -9,7 +9,7 @@ using Photon.Pun;
 public class Result : MonoBehaviourPun
 {
     SequenceBoardGame GameManager;
-    RoomManager roomManager;
+    GameRoomManager gameRoomManager;
     Text titleText, bodyText;
     Button confirmButton;
     public float maxTime;
@@ -23,11 +23,10 @@ public class Result : MonoBehaviourPun
     }
     void SetResult()
     { 
-
         GameManager = GameObject.Find("GameManager").GetComponent<SequenceBoardGame>();
         titleText = GameObject.Find("Title Text").GetComponent<Text>();
         bodyText = GameObject.Find("Body Text").GetComponent<Text>();
-        roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager>();
+        gameRoomManager = GameObject.Find("GameRoomManager").GetComponent<GameRoomManager>();
         // find button
         confirmButton = GameObject.Find("Confirm Button").GetComponent<Button>();
     }
@@ -36,7 +35,7 @@ public class Result : MonoBehaviourPun
         confirmButton.onClick.AddListener(() => 
         {
             Debug.Log("OK");
-            roomManager.SceneLoadValue();
+            gameRoomManager.GameOver();
             Destroy(gameObject);
         });
     }

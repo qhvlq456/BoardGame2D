@@ -20,7 +20,7 @@ public class NetworkConcaveStone : MonoBehaviourPun
         SetImageStone();
     }
     private void Update() {
-        if(GameManager.isGameOver) Destroy(gameObject);
+        //if(GameManager.isGameOver) Destroy(gameObject);
     }
     void SetConcaveStone()
     {

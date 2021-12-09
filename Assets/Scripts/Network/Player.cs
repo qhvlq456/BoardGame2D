@@ -58,12 +58,13 @@ public class Player : MonoBehaviourPun
             }
 
             CreateStone();
+            SyncPlayer(GameManager.r,GameManager.c);
+
             GameManager.CheckDirection();
 
             if(GameManager.AnalyzeBoard()) GameOver();
             else
             {
-                SyncPlayer(GameManager.r,GameManager.c);
                 GameManager.ResetLength();
             }
 
@@ -119,19 +120,6 @@ public class Player : MonoBehaviourPun
     void RpcGameOver() // 여기서 한번
     {
         GameManager.GameOver(); // DestroyStones 여기에 넣어서 그냥 manager만 false하여 자동으로 하면 될 것 같은데..?
-    }
-    #endregion
-
-    #region Disconnected Player
-    public void DestroyStones() {
-        var stones = FindObjectsOfType<NetworkConcaveStone>();
-
-        Debug.LogError($"find player name = {gameObject.name}");
-        foreach(var stone in stones)
-        {
-            if(pv.IsMine) 
-                PhotonNetwork.Destroy(stone.gameObject);
-        }
     }
     #endregion
 }

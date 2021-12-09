@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 3152705469740071833}
   - component: {fileID: 3152705469740071834}
   - component: {fileID: 3152705469740071835}
-  - component: {fileID: 2327003930486608815}
+  - component: {fileID: 6469943258097797319}
   m_Layer: 5
   m_Name: AlertPanel
   m_TagString: Untagged
@@ -172,7 +172,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2327003930486608815
+--- !u!114 &6469943258097797319
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -184,5 +184,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b83d0529286c7149a58bdb4e06d3459, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bodyText: {fileID: 3152705469325544753}
   alert: 0

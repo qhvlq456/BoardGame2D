@@ -6,79 +6,50 @@ using Photon.Pun;
 
 public class ChattingManager : MonoBehaviour
 {
-    PhotonView pv;
+    protected PhotonView pv;
     [SerializeField]
-    GameObject chatting;
+    protected GameObject chattingText;
     [SerializeField]
-    GameObject chattingText;
+    protected InputField input;
     [SerializeField]
-    InputField input;
-    [SerializeField]    
-    Button enterButton;
-    [SerializeField]
-    Button chattingButton;
-    Queue<string> contentsQueue = new Queue<string>();
-    private void Awake() {
+    GameObject parent;
+    const int maxTextNum = 8;
+    protected Queue<GameObject> contentsObject = new Queue<GameObject>();
+    public virtual void Awake() {
         pv = GetComponent<PhotonView>();
     }
-    public void CreateChattingText()
+    public GameObject InstantiateText(string msg)
+    {
+        GameObject obj = Instantiate(chattingText,parent.transform);
+        obj.GetComponent<Text>().text = msg;
+
+        return obj;
+    }
+    [PunRPC]
+    public void MaxQueue()
+    {
+        if(contentsObject.Count >= maxTextNum)
+        {
+            Destroy(contentsObject.Dequeue());
+        }
+    }
+    [PunRPC]
+    public void RpcEnQueue(string msg)
+    {
+        contentsObject.Enqueue(InstantiateText(msg));
+    }
+    protected void CreateText()
     {
         if(string.IsNullOrEmpty(input.text)) return;
-        pv.RPC("RcpEnqueue",RpcTarget.AllViaServer,string.Format("{0} : {1}",PhotonNetwork.NickName,input.text));
+
+        pv.RPC("MaxQueue",RpcTarget.AllViaServer);
+        pv.RPC("RpcEnQueue",RpcTarget.AllViaServer,string.Format("{0} : {1}",PhotonNetwork.NickName,input.text));
 
         input.text = "";
     }
-    [PunRPC]
-    void RcpEnqueue(string msg)
+    public virtual void OnClickEnterButton()
     {
-        contentsQueue.Enqueue(msg); // 아 이두개를 동기화 시켰어야 됬네
-        StartCoroutine(CheckMessage());
-    }
-    void RpcCreateChattingText(string msg)
-    {        
-        Text chatting = Instantiate(chattingText,GameObject.Find("ChattingObject").transform).GetComponent<Text>();
-        
-        chatting.text = msg;
-    }
-    IEnumerator CheckMessage()
-    {
-        if(contentsQueue.Count <= 0) 
-        {
-            yield break;
-        }        
-
-        while(chattingButton.gameObject.activeSelf)
-        {
-            chattingButton.image.color = Color.Lerp(Color.white,Color.green,Mathf.PingPong(Time.time * 2,1));
-            yield return null;
-        }
-
-        while(contentsQueue.Count > 0)
-        {
-            string content = contentsQueue.Dequeue(); // 난 비어져 있는데 상대방은 안비어져잇는 경우를 생각 못했구나 ㅋ
-            RpcCreateChattingText(content);
-            yield return null;
-        }
-
-        chattingButton.image.color = Color.white;
-    }
-    public void OnClickEnterButton()
-    {
-        CreateChattingText();
+        CreateText();
     }
 
-    public void OnClickCloseChatting()
-    {
-        StartCoroutine(WaitForCloseDelay());
-    }
-
-    IEnumerator WaitForCloseDelay()
-    {
-        Animator anim = chatting.GetComponent<Animator>();
-        anim.SetTrigger("close");
-
-        yield return new WaitForSeconds(0.5f);
-        chatting.SetActive(false);
-        anim.ResetTrigger("close");
-    }    
 }

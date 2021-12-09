@@ -35,7 +35,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     GameObject roomPrefebs;
     [SerializeField]
     CanvasGroup canvasGroup;
-
     private void Awake() {
         SetGame();
         canvasGroup.interactable = true;
@@ -179,8 +178,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
     }
 
-    #endregion    
-    
+    #endregion
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
         print(message);

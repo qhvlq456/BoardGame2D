@@ -67,6 +67,15 @@ MonoBehaviour:
   - RpcPlusSceneLoadValue
   - SceneLoadValue
   - RpcSceneLoadValue
+  - RpcSceneLoad
+  - RpcGameStopCoroutine
+  - RpcLoadBool
+  - MaxQueue
+  - RpcEnQueue
+  - SetOthersChatting
+  - RpcPeopleCount
+  - RpcAddPlayerCount
+  - RpcSyncScene
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
