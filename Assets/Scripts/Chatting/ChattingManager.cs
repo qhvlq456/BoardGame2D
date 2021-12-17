@@ -13,7 +13,7 @@ public class ChattingManager : MonoBehaviour
     protected InputField input;
     [SerializeField]
     GameObject parent;
-    const int maxTextNum = 8;
+    const int maxTextNum = 6;
     protected Queue<GameObject> contentsObject = new Queue<GameObject>();
     public virtual void Awake() {
         pv = GetComponent<PhotonView>();

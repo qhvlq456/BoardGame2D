@@ -67,7 +67,7 @@ public class SpawnChessStone : MonoBehaviour
         xPos = -3.6f; yPos = 3.6f; interval = 0.9f;
         int difference = 4;
         int _difference = 0;
-        int _turn = chessManager.turn;        
+        int _turn = chessManager.turn;
         // black stone start pos = r : 0, c = 0 ~ r : 1, c = 7
         // white stone start pos = r : 6, c = 0 ~ r : 7, c = 7
         // row difference = 4

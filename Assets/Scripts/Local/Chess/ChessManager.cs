@@ -15,6 +15,7 @@ public class ChessManager : StrategyBoardGame
     GameObject spawnPanel;
     SpawnChessStone spawnChessStone;
     Transform parentTransform;
+    int r,c;
 
     [Header("Object")]
     public RaycastHit2D hit;
@@ -25,6 +26,7 @@ public class ChessManager : StrategyBoardGame
     void Start()
     {
         OnGameStart();
+        DebugBoard();
     }
     
     void Update()
@@ -69,7 +71,7 @@ public class ChessManager : StrategyBoardGame
     {
         if(hit.collider == null) // hit 잡힌게 없다 .. 로직 검사하여 movement 실행 후 초기화(common)
         {
-            if(!AnalyzeBoard()) return;
+            if(!AnalyzeBoard(r,c)) return;
             // success analyze
             FindAttackObject(); // 1. find search enemy
             MoveObject(); // 2. move select object
@@ -107,7 +109,7 @@ public class ChessManager : StrategyBoardGame
     void MoveObject()
     {
         ChessStone stone = checkObject.GetComponent<ChessStone>();
-        Move(stone.m_row, stone.m_col); // board 로직 이동
+        Move(stone.m_row, stone.m_col,r,c); // board 로직 이동
         stone.m_row = r; stone.m_col = c; // stone의 r,c 변경
         stone.transform.position = new Vector2(xMidpos[c],yMidpos[r]); // world space 위치 변경
     }
@@ -165,7 +167,7 @@ public class ChessManager : StrategyBoardGame
             if(_list.m_row == r && _list.m_col == c) 
             {
                 //Debug.Log($"{_list.name} is Destroy");
-                Attack(_list.m_num); // 이 리스트 때문에 그렇구나;;
+                Attack(r,c,_list.m_num); // 이 리스트 때문에 그렇구나;;
                 Destroy(_list.gameObject);
             }
         }

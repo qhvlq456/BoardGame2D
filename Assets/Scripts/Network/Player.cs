@@ -14,6 +14,7 @@ public class Player : MonoBehaviourPun
     OmokManager GameManager;
     string stonePath;
     public int m_turn; //{set; private get;}
+    int r,c;
     Vector2 _vector;
     [SerializeField]
     GameObject alertUI;
@@ -46,11 +47,11 @@ public class Player : MonoBehaviourPun
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             
-            GameManager.r = StaticVariable.OmokGetStoneRowPosition(mousePos,ref _vector);
-            GameManager.c = StaticVariable.OmokGetStoneColPosition(mousePos,ref _vector);
+            r = StaticVariable.OmokGetStoneRowPosition(mousePos,ref _vector);
+            c = StaticVariable.OmokGetStoneColPosition(mousePos,ref _vector);
 
-            if (GameManager.r < 0 || GameManager.c < 0) return;
-            if(!GameManager.IsEmpty()) 
+            if (r < 0 || c < 0) return;
+            if(!GameManager.IsEmpty(r,c)) 
             {
                 GameObject alert = Instantiate(alertUI,GameObject.Find("Canvas").transform);
                 alert.GetComponent<AlertUI>().alert = AlertUI.EAlertKind.Fail;
@@ -58,11 +59,11 @@ public class Player : MonoBehaviourPun
             }
 
             CreateStone();
-            SyncPlayer(GameManager.r,GameManager.c);
+            SyncPlayer(r,c);
 
-            GameManager.CheckDirection();
+            GameManager.CheckDirection(r,c,m_turn);
 
-            if(GameManager.AnalyzeBoard()) GameOver();
+            if(GameManager.AnalyzeBoard(r,c,5)) GameOver();
             else
             {
                 GameManager.ResetLength();

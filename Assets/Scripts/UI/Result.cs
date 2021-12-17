@@ -26,7 +26,7 @@ public class Result : MonoBehaviourPun
         GameManager = GameObject.Find("GameManager").GetComponent<SequenceBoardGame>();
         titleText = GameObject.Find("Title Text").GetComponent<Text>();
         bodyText = GameObject.Find("Body Text").GetComponent<Text>();
-        gameRoomManager = GameObject.Find("GameRoomManager").GetComponent<GameRoomManager>();
+        gameRoomManager = GameObject.Find("GameRoomManager").GetComponent<GameRoomManager>(); // 이건또 형변화 어떻게 시키지..
         // find button
         confirmButton = GameObject.Find("Confirm Button").GetComponent<Button>();
     }

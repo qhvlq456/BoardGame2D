@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class AppMenu : MonoBehaviour
 {
-    static string packageFile = "Res2D_BoardGame(base).unitypackage";
+    static string packageFile = "Res2D_BoardGame_GameScene(base).unitypackage";
     static string disconnectPanel = "DisconnectPanel";
     static string RobbyPanel = "RobbyPanel";
     static string Settings = "RoomSettings";
@@ -43,8 +43,19 @@ public class AppMenu : MonoBehaviour
         AssetDatabase.ImportPackage(packageFile, true);
         CheckMark("BoardGame2D/Improt BackUp");
 
-    }        
+    }
+    [MenuItem("BoardGame2D/All Stone Destroy", false, 11)]
+    static void AllStoneDestroy()
+    {
+        var stones = FindObjectsOfType<ConcaveStone>();
+        OmokManager manager = GameObject.Find("GameManager").GetComponent<OmokManager>();
 
+        foreach(var stone in stones)
+        {
+            manager.SetBoardValue(stone.m_row,stone.m_col,0);
+            Destroy(stone.gameObject);
+        }
+    }
     [MenuItem("Lobby/All Panel true", false, 2)]
     static void AllPanelOn()
     {

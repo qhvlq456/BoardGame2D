@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +14,7 @@ namespace Res_2D_BoardGame
     {
         int[,] board;
         int arrNum;
-        public int r,c;
+        //public int r,c;
         public int turn; //{get; private set; }
         public bool isGameOver; //{get; private set; }
         public BoardGameBase()
@@ -31,10 +31,10 @@ namespace Res_2D_BoardGame
         {
             Array.Clear(board,0,board.Length);
         }
-        public void SetRowCol(int r, int c)
-        {
-            this.r = r; this.c = c;
-        }
+        // public void SetRowCol(int r, int c)
+        // {
+        //     this.r = r; this.c = c;
+        // }
         public int GetBoardValue(int r, int c) // board pos value값을 리턴하여 logic의 구성하게 돕는다
         {
             return board[r, c];
@@ -93,30 +93,34 @@ namespace Res_2D_BoardGame
     {
         // turn == 1 : white , 2 == black
         // top, bottom, left, right, top-left, top-right, bottom-left, bottom-right
-        protected enum SequenceDir { T, B, L, R, TL, TR, BL, BR }        
+        protected enum SequenceDir { T, B, L, R, TL, TR, BL, BR }
         protected Queue<int> sequenceQ;
-        protected int[,] checkDir = new int[,] { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
+        public int[,] checkDir = new int[,] { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
         public SequenceBoardGame()
         {
             sequenceQ = new Queue<int>();
         }
-        public bool IsEmpty()
+        public bool IsEmpty(int r, int c)
         {
             if (GetBoardValue(r, c) != 0 || GetBoardValue(r,c) == turn) return false;
-            else return true;
+            else 
+            {
+                return true;
+            }            
         }
-        public void CheckDirection()
+        public void CheckDirection(int r, int c, int _turn)
         {
             // top, bottom, left, right, top-left, top-right, bottom-left, bottom-right
 
             for (int i = 0; i < checkDir.GetLength(0); i++) // 두개가 있을 경우의 수를 생각 못했네...
             {
                 if (!CheckOverValue(r, c) || !CheckOverValue(r + checkDir[i, 0], c + checkDir[i, 1])) continue; // out of index range check
-                if (GetBoardValue(r + checkDir[i, 0], c + checkDir[i, 1]) == turn)
+                if (GetBoardValue(r + checkDir[i, 0], c + checkDir[i, 1]) == _turn)
                     sequenceQ.Enqueue(i);
             }
         }
-        public abstract bool AnalyzeBoard();
+        public abstract bool AnalyzeBoard(int r, int c, int length);
+        public abstract bool AnalyzeBoard(int r, int c,int turn, int length);
     }
     // chess, 장기, 마작 // one card, poker, 라스베가스 이거랑은 다른 분류인데 이건 card분류 
     public abstract class StrategyBoardGame : BoardGameBase 
@@ -158,12 +162,12 @@ namespace Res_2D_BoardGame
         */        
 
         // 나중에 _turn 그냥 turn으로 변경
-        public void Move(int prevR, int prevC)
+        public void Move(int prevR, int prevC, int r, int c)
         {
             SetBoardValue(prevR,prevC,0); // 전의 값 초기화
             SetBoardValue(r,c,turn); // 이동할 현재의 값 set
         }
-        public void Attack(int stone)
+        public void Attack(int r, int c, int stone)
         {
             // check enemy destroy stone
             if(IsPossibleMove(r,c,turn) == (int)MoveKind.enemy)
@@ -180,7 +184,7 @@ namespace Res_2D_BoardGame
             else if (GetBoardValue(r,c) != _turn) return (int) MoveKind.enemy; // 적과 조우함
             else return (int) MoveKind.same;
         }        
-        public bool AnalyzeBoard() // 이 분석이 각 stone마다 달라가지고..
+        public bool AnalyzeBoard(int r , int c) // 이 분석이 각 stone마다 달라가지고..
         {
             foreach(var _list in moveList)
             {
@@ -211,6 +215,7 @@ namespace Res_2D_BoardGame
         // turn == 1 : white , 2 == black
         public Sprite[] _sprite;
         public SpriteRenderer _renderer;
+        public EPlayerType playerType;
         public bool isCheck {get; private set;}
         public int m_row;
         public int m_col;
@@ -227,7 +232,11 @@ namespace Res_2D_BoardGame
         public virtual void SetImageStone()
         {
             // 1. white, 2. black
-            _renderer.sprite = _sprite[turn - 1];
+            _renderer.sprite = _sprite[turn - 1]; // 아 이것부터 해결해야 되네..
+        }
+        public void SetImageType()
+        {
+            _renderer.sprite = _sprite[(int)playerType];
         }
         
 

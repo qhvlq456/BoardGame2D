@@ -37,7 +37,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public void RpcSyncScene()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
-        Debug.LogError("What!!");
     }
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer) // 나자신은 포함 안되는구나 ㅎ
     {
@@ -54,7 +53,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     #region Enter and Left Player
     public virtual void PlayerEnter() // 현재 room에 존재하는 모든 player들의 이름을 가져와야 되는데ㅋㅋㅋ 내가 이걸 왜 rpc로 햇지라고 일단 생각 하엿음
     {
-        Debug.LogError($"player length = {PhotonNetwork.PlayerList.Length}"); // 요게 ㅈㄴ 문제네
+        //Debug.LogError($"player length = {PhotonNetwork.PlayerList.Length}"); // 요게 ㅈㄴ 문제네
 
         foreach(var player in PhotonNetwork.PlayerList)
         {

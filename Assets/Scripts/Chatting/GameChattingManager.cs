@@ -9,8 +9,6 @@ public class GameChattingManager : ChattingManager
     [SerializeField]
     GameObject chatting;
     [SerializeField]
-    Button enterButton;
-    [SerializeField]
     Button chattingButton;
     public override void Awake() {
         base.Awake();
@@ -36,12 +34,7 @@ public class GameChattingManager : ChattingManager
             chattingButton.image.color = Color.Lerp(Color.white,Color.green,Mathf.PingPong(Time.time * 2,1));
             yield return null;
         }
-
-        while(contentsObject.Count > 0)
-        {
-            yield return null;
-        }
-
+        
         chattingButton.image.color = Color.white;
     }
     IEnumerator WaitForCloseDelay()

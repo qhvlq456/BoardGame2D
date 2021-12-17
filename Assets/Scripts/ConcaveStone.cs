@@ -14,12 +14,21 @@ public class ConcaveStone : Stone
         _text.text = StaticVariable.sequneceNum.ToString();
     }
     void Update() {
-        SetTextColor();
+        SetTextColor2();
     }
     public void SetTextColor()
     {        
         // 1. white = 1, 2. black = 2
         if(turn == 1)
+        {
+            _text.color = Color.black;
+        }
+        else _text.color = Color.white;
+    }
+    public void SetTextColor2()
+    {        
+        // 1. white = 1, 2. black = 2
+        if(playerType == EPlayerType.white)
         {
             _text.color = Color.black;
         }

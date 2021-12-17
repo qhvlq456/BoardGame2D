@@ -12,6 +12,7 @@ public class OthelloManager : SequenceBoardGame
     float lastPos = 3.7f;
     float startPos = -3.7f;
     float interval = 0.925f;
+    int r,c;
     GameObject _stone, _result;    
     Transform _transform;    
     List<KeyValuePair<int, int>> list = new List<KeyValuePair<int, int>>();    
@@ -32,14 +33,14 @@ public class OthelloManager : SequenceBoardGame
             c = StaticVariable.GetStoneColPosition(mousePos);
             if (r < 0 || c < 0) return;
             // r,c 입력했다고 가정
-            if (!IsEmpty())
+            if (!IsEmpty(r,c))
             {
                 return;
             }
             else
             {
-                CheckDirection();
-                if (!AnalyzeBoard()) return;
+                CheckDirection(r,c,turn);
+                if (!AnalyzeBoard(r,c,0)) return;
                 else
                 {
                     CreateStone(r,c);
@@ -60,7 +61,7 @@ public class OthelloManager : SequenceBoardGame
         stone.GetComponent<ConcaveStone>().m_col = col;
         stone.GetComponent<ConcaveStone>().SetImageStone();
     }     
-    public override bool AnalyzeBoard()
+    public override bool AnalyzeBoard(int r, int c, int length)
     {
         // 내가 둔 돌에 사방에 같은 돌이 한개라도 존재한다면 들어감
         // 고로 오델로는 이 방향을 피하면 됨.. 총 8방향이 존재한다
@@ -172,5 +173,10 @@ public class OthelloManager : SequenceBoardGame
     public void ResetList()
     {
         list.Clear();        
+    }
+
+    public override bool AnalyzeBoard(int r, int c, int turn, int length)
+    {
+        throw new NotImplementedException();
     }
 }

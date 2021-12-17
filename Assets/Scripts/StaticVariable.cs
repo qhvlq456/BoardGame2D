@@ -17,8 +17,6 @@ public class StaticVariable : MonoBehaviour
     public static int othelloBoardNum = 8;
     // chess
     public static int chessBoardNum = 8;
-    // 2인용 게임
-    public static int twoPeople = 0;
     // 나중에 이것도 바꿔야겠다 모든 pos값 하나의 함수로 다 되게
     // omok
     public static int OmokGetStoneRowPosition(Vector2 _mousePos, ref Vector2 _vector)

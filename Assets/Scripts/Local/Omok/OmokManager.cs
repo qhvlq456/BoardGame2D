@@ -7,16 +7,16 @@ public class OmokManager : SequenceBoardGame
 {
     GameObject _result;
     Transform _transform;
-    int m_Length = 5;
+    int m_Length = 0;
 
     void Awake()
     {
         OnGameStart();
     }
-    public override bool AnalyzeBoard()
+    public override bool AnalyzeBoard(int r, int c ,int length)
     {
         if (sequenceQ.Count <= 0) return false;
-    
+        
         while (sequenceQ.Count > 0)
         {
             int dir = sequenceQ.Dequeue();
@@ -28,17 +28,17 @@ public class OmokManager : SequenceBoardGame
             sr += checkDir[dir, 0], sc += checkDir[dir, 1])
             {
                 _sr = sr; _sc = sc;
-                if(GetBoardValue(sr,sc) != turn) 
+                if(GetBoardValue(sr,sc) != turn)
                 {
                     break;
                 }
                 else // 나와 같은 위치에 있는 돌
                 {
-                    m_Length--;
+                    m_Length++;
                 }
             }
             
-            if (m_Length <= 0) break; // 오목!!
+            if (m_Length >= length) break; // 오목!!
             else ResetLength(); // 재시작
 
             // 왔던길 되돌아 가기
@@ -51,19 +51,72 @@ public class OmokManager : SequenceBoardGame
             {
                 if(GetBoardValue(row,col) != turn) 
                 {
-                    if(m_Length <= 0) break;
+                    if(m_Length == length) break;
                     ResetLength();
                 }
                 else // 나와 같은 위치에 있는 돌
                 {
-                    m_Length--;
+                    m_Length++;
                 }
             }
-            if (m_Length <= 0) break; // 오목!!
+            if (m_Length >= length) break; // 오목!!
             else ResetLength(); // 재시작
         
         }
-        if (m_Length <= 0) return true;
+        if (m_Length >= length) return true;
+        else return false;
+    }
+    public override bool AnalyzeBoard(int r, int c ,int _turn, int length)
+    {
+        if (sequenceQ.Count <= 0) return false;
+        
+        while (sequenceQ.Count > 0)
+        {
+            int dir = sequenceQ.Dequeue();
+            int _sr,_sc;
+            _sr = _sc = 0;
+
+            for (int sr = r, sc = c;
+            CheckOverValue(sr, sc);
+            sr += checkDir[dir, 0], sc += checkDir[dir, 1])
+            {
+                _sr = sr; _sc = sc;
+                if(GetBoardValue(sr,sc) != _turn)
+                {
+                    break;
+                }
+                else // 나와 같은 위치에 있는 돌
+                {
+                    m_Length++;
+                }
+            }
+            
+            if (m_Length >= length) break; // 오목!!
+            else ResetLength(); // 재시작
+
+            // 왔던길 되돌아 가기
+            int changeR,changeC;
+            CheckChangeDirection(dir,out changeR,out changeC);
+
+            if(changeR == 0 && changeC == 0) return false;
+
+            for(int row = _sr, col = _sc; CheckOverValue(row, col); row += changeR, col += changeC)
+            {
+                if(GetBoardValue(row,col) != _turn) 
+                {
+                    if(m_Length == length) break;
+                    ResetLength();
+                }
+                else // 나와 같은 위치에 있는 돌
+                {
+                    m_Length++;
+                }
+            }
+            if (m_Length >= length) break; // 오목!!
+            else ResetLength(); // 재시작
+        
+        }
+        if (m_Length >= length) return true;
         else return false;
     }
     public void CheckChangeDirection(int dir, out int changeR, out int changeC)
@@ -120,6 +173,6 @@ public class OmokManager : SequenceBoardGame
     }
     public void ResetLength()
     {
-        m_Length = 2;
+        m_Length = 0;
     }
 }
