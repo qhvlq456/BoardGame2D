@@ -8,13 +8,13 @@ public class OmokPlayer : BasePlayer
 
     [SerializeField]
     protected LocalOmokManager GameManager;
-    protected float[] xPostion;
-    protected float[] yPostion;
+    protected float[] xPosition;
+    protected float[] yPosition;
     public virtual void Awake()
     {
         boardNum = StaticVariable.omokBoardNum;
-        xPostion = new float[boardNum];
-        yPostion = new float[boardNum];
+        xPosition = new float[boardNum];
+        yPosition = new float[boardNum];
         SetPlayer();
         SetPutPos();
     }
@@ -39,6 +39,7 @@ public class OmokPlayer : BasePlayer
             {
                 AlertUI alert = CreateAlertUI().GetComponent<AlertUI>();
                 alert.GetComponent<AlertUI>().alert = AlertUI.EAlertKind.Fail;
+                alert.StartAnimation();
                 return;
             }
 
@@ -82,7 +83,7 @@ public class OmokPlayer : BasePlayer
 
         for (int i = 0; i < boardNum; i++) // 아니 이것만 왜 되는거지?
         {
-            yPostion[i] = currentPos;
+            yPosition[i] = currentPos;
             currentPos -= interval;
         }
 
@@ -91,7 +92,7 @@ public class OmokPlayer : BasePlayer
 
         for (int i = 0; i < boardNum; i++)
         {
-            xPostion[i] = currentPos;
+            xPosition[i] = currentPos;
             currentPos += interval;
         }
     }

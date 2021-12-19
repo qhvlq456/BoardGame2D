@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
 public enum EPlayerType{
     white,
     black
 }
-public abstract class BasePlayer : MonoBehaviourPun
+public abstract class BasePlayer : MonoBehaviour
 {
     public EPlayerType playerType;
 

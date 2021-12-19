@@ -31,10 +31,6 @@ namespace Res_2D_BoardGame
         {
             Array.Clear(board,0,board.Length);
         }
-        // public void SetRowCol(int r, int c)
-        // {
-        //     this.r = r; this.c = c;
-        // }
         public int GetBoardValue(int r, int c) // board pos value값을 리턴하여 logic의 구성하게 돕는다
         {
             return board[r, c];
@@ -62,6 +58,14 @@ namespace Res_2D_BoardGame
         public void NextTurn() // 1인용인 경우 사용하지 않음 그만이라 가상함수로 정의하지 않음!
         {            
             turn = 3 - turn; // 2 > 1 > 2 > 1
+        }
+        public int GetNextTurn()
+        {
+            return 3 - turn;
+        }
+        public int GetTurn()
+        {
+            return turn;
         }
         public bool CheckOverValue(int r, int c) // row, col의 범위 값을 넘으면 false를 리턴함 .. length값이기 때문에 r >= row 하여야 함
         {
@@ -122,6 +126,30 @@ namespace Res_2D_BoardGame
         public abstract bool AnalyzeBoard(int r, int c, int length);
         public abstract bool AnalyzeBoard(int r, int c,int turn, int length);
     }
+    // public class LocalSequenceBoardGame : SequenceBoardGame // 이거 인터페이스로 한번 생각해보자 나쁘지 않을거 같음
+    // {
+    //     [SerializeField]
+    //     GameObject player;
+    //     [SerializeField]
+    //     GameObject enemy;
+    //     [SerializeField]
+    //     GameObject gameMenu;
+    //     public int playerStoneNum;
+    //     public int enemyStoneNum;
+    //     public virtual void OnClickGameStartButton()
+    //     {
+    //         gameMenu.SetActive(false);
+    //         enemyStoneNum = playerStoneNum == (int)EPlayerType.white ? (int)EPlayerType.black : (int)EPlayerType.white;
+    //     }
+    //     public GameObject CreatePlayer()
+    //     {
+    //         return Instantiate(player,new Vector3(0,0,0),Quaternion.identity);
+    //     }
+    //     public GameObject CreateEnemy()
+    //     {
+    //         return Instantiate(enemy,new Vector3(0,0,0),Quaternion.identity);
+    //     }
+    // }
     // chess, 장기, 마작 // one card, poker, 라스베가스 이거랑은 다른 분류인데 이건 card분류 
     public abstract class StrategyBoardGame : BoardGameBase 
     {

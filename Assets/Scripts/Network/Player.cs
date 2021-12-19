@@ -55,6 +55,7 @@ public class Player : MonoBehaviourPun
             {
                 GameObject alert = Instantiate(alertUI,GameObject.Find("Canvas").transform);
                 alert.GetComponent<AlertUI>().alert = AlertUI.EAlertKind.Fail;
+                alert.GetComponent<AlertUI>().StartAnimation();
                 return;
             }
 
