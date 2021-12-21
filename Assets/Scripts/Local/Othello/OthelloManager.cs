@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Res_2D_BoardGame;
 
+// manager는 도구일 뿐이야!
 public class OthelloManager : SequenceBoardGame
 {
     [SerializeField]
@@ -13,88 +14,32 @@ public class OthelloManager : SequenceBoardGame
     [SerializeField]
     Text blackNumber;
     [SerializeField]
-    GameObject numbering;
-
-    float[] xMidpos = new float[StaticVariable.othelloBoardNum];
-    float[] yMidpos = new float[StaticVariable.othelloBoardNum];
-    float lastPos = 3.7f;
-    float startPos = -3.7f;
-    float interval = 0.925f;
-    int r,c;
-    GameObject _stone, _result;
-    Transform _transform;    
-    List<KeyValuePair<int, int>> list = new List<KeyValuePair<int, int>>();
-    public List<ConcaveStone> whiteList = new List<ConcaveStone>(); // 임시 public 
-    public List<ConcaveStone> blackList = new List<ConcaveStone>(); // 임시 public 
+    GameObject numbering;    
+    GameObject _result;
+    Transform _transform;
+    protected  List<KeyValuePair<int, int>> list = new List<KeyValuePair<int, int>>();
+    public List<ConcaveStone> saveStones = new List<ConcaveStone>();
 
     void Start()
     {
         OnGameStart();
     }
     
-    void Update()
+    public void ChangeStoneNumber()
     {
-        if (isGameOver) return;        
-        if (Input.GetMouseButtonDown(0))
-        {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            r = StaticVariable.GetStoneRowPosition(mousePos);
-            c = StaticVariable.GetStoneColPosition(mousePos);
-            if (r < 0 || c < 0) return;
-            // r,c 입력했다고 가정
-            if (!IsEmpty(r,c))
-            {
-                return;
-            }
-            else
-            {
-                // (int)EPlayerType.white + 1
-                if (!CheckTransferTurn(GetTurn()))
-                {
-                    Debug.Log("Don't put Stone therefore change turn");
-                    return;
-                }
-                else
-                {
-                    CheckDirection(r,c,turn);
-                    if (!AnalyzeBoard(r,c,0)) return;
-                    else
-                    {
-                        CreateStone(r,c);
-                        OnChangeStone();
-                        SetBoardValue(r, c, turn);
-                        ResetList();
-                        ChangeStoneNumber();
-                    }
-                }
-                
-            }
-            if(!CheckTransferTurn(GetTurn()) && !CheckTransferTurn(GetNextTurn())) GameOver();
-            else NextTurn();
-        }
-    }    
-    void ChangeStoneNumber()
-    {
-        whiteNumber.text = whiteList.Count.ToString();
-        blackNumber.text = blackList.Count.ToString();
+        var w_count = saveStones.Where(e => e.playerType == EPlayerType.white);
+        var b_count = saveStones.Where(e => e.playerType == EPlayerType.black);
+        whiteNumber.text = w_count.Count().ToString();
+        blackNumber.text = b_count.Count().ToString();
+    
     }
-    void CreateStone(int row, int col)
-    {
-        ConcaveStone stone = Instantiate(_stone, new Vector2(xMidpos[col],yMidpos[row]), Quaternion.identity).GetComponent<ConcaveStone>();
-        stone.playerType = turn == 1 ? EPlayerType.white : EPlayerType.black;
-        stone.GetComponent<ConcaveStone>().turn = turn;
-        stone.GetComponent<ConcaveStone>().m_row = row;
-        stone.GetComponent<ConcaveStone>().m_col = col;
-        stone.GetComponent<ConcaveStone>().SetImageStone();
-
-        if(turn - 1 == (int)EPlayerType.white) whiteList.Add(stone);
-        else blackList.Add(stone);
-    }     
-    public override bool AnalyzeBoard(int r, int c, int length)
+    public override bool AnalyzeBoard(int r, int c, int length = 0)
     {
         // 내가 둔 돌에 사방에 같은 돌이 한개라도 존재한다면 들어감
         // 고로 오델로는 이 방향을 피하면 됨.. 총 8방향이 존재한다
-
+        // 2개인경우만 생각하자;; 
+        // 검은돌 2개가 들어갔을때 나와 같은 돌을 만나지 않으면 그냥 반복문을 나가게 된다 
+        // 결국 연속성이 깨진 상태이지만 리스트안에 들어가 있어서 생긴 이슈인것 같다
         int[] diraction = new int[checkDir.GetLength(0)];
         List<KeyValuePair<int,int>> value = new List<KeyValuePair<int, int>>();
 
@@ -110,13 +55,16 @@ public class OthelloManager : SequenceBoardGame
                 CheckOverValue(sr, sc);
                 sr += checkDir[i, 0], sc += checkDir[i, 1])
                 {
-                    if (GetBoardValue (sr, sc) == 3 - turn) // 1. 나의 돌과 다른 경우
+                    if (GetBoardValue (sr, sc) == GetNextTurn()) // 1. 나의 돌과 다른 경우
                     {
+                        ///if(!CheckOverValue(sr + checkDir[i, 0], sc + checkDir[i, 1]))
                         value.Add(new KeyValuePair<int, int>(sr, sc));
                     }
                     else if(GetBoardValue(sr,sc) == turn) // 나의 돌과 같은 경우 .. 연속성이 깨졌다
                     {
+                        // 여기서 경우의 수가 두개임
                         CheckDirectionPosition(value);
+                        break;
                     }
                     else // 돌이 없는 경우
                     {
@@ -124,10 +72,55 @@ public class OthelloManager : SequenceBoardGame
                         break;
                     }
                 }
+                value.Clear(); // 2개 이상의 돌이 value에 남아 있을 수 있어서 clear를 한다
             }
         }
         if (list.Count <= 0) return false;
         else return true;
+    }
+    public override bool AnalyzeBoard(int r, int c, int _turn, int length = 0)
+    {
+        int[] diraction = new int[checkDir.GetLength(0)];
+        List<KeyValuePair<int,int>> value = new List<KeyValuePair<int, int>>();
+
+        while(sequenceQ.Count > 0)
+        {
+            diraction[sequenceQ.Dequeue()] = 1;
+        }
+        for(int i = 0; i < diraction.Length; i++)
+        {
+            if(diraction[i] != 1)
+            {
+                for (int sr = r + checkDir[i, 0], sc = c + checkDir[i, 1];
+                CheckOverValue(sr, sc);
+                sr += checkDir[i, 0], sc += checkDir[i, 1])
+                {
+                    if (GetBoardValue (sr, sc) == 3 - _turn) // 1. 나의 돌과 다른 경우
+                    {
+                        ///if(!CheckOverValue(sr + checkDir[i, 0], sc + checkDir[i, 1]))
+                        value.Add(new KeyValuePair<int, int>(sr, sc));
+                    }
+                    else if(GetBoardValue(sr,sc) == _turn) // 나의 돌과 같은 경우 .. 연속성이 깨졌다
+                    {
+                        // 여기서 경우의 수가 두개임
+                        CheckDirectionPosition(value);
+                        break;
+                    }
+                    else // 돌이 없는 경우
+                    {
+                        value.Clear();
+                        break;
+                    }
+                }
+                value.Clear(); // 2개 이상의 돌이 value에 남아 있을 수 있어서 clear를 한다
+            }
+        }
+        if (list.Count <= 0) return false;
+        else return true;
+    }
+    public bool ConditionGameOver()
+    {
+        return !CheckTransferTurn(GetTurn()) && !CheckTransferTurn(GetNextTurn());
     }
     public bool CheckTransferTurn(int _turn) // 이건 그냥 보조수단임 // 여기서 만들어야 하는구나~ㅋㅋㅋㅋㅋ 시발
     {
@@ -141,7 +134,7 @@ public class OthelloManager : SequenceBoardGame
                 if(IsEmpty(i,j))
                 {
                     CheckDirection(i,j,_turn);
-                    if(AnalyzeBoard(i,j,0)) 
+                    if(AnalyzeBoard(i,j,_turn,0))
                     {
                         ResetList();
                         isTrue = true;
@@ -161,45 +154,20 @@ public class OthelloManager : SequenceBoardGame
 
     public override void OnGameStart()
     {
-        StaticVariable.startPos = startPos;
-        StaticVariable.lastPos = lastPos;
-        StaticVariable.interval = interval;
-        StaticVariable.InitXMidPos(xMidpos);
-        StaticVariable.InitYMidPos(yMidpos);
-
-        _stone = Resources.Load("Stone") as GameObject;
         _result = Resources.Load("Result Panel") as GameObject;
         _transform = GameObject.Find("Canvas").transform;
-        InitBoard(StaticVariable.othelloBoardNum);        
-        InitStone();
+        InitBoard(StaticVariable.othelloBoardNum);
         CreateNumbering();
     }
 
     public override void OnGameStop()
     {
-        string s = string.Format("Victory : {0}",whiteList.Count > blackList.Count ? "White" : whiteList.Count < blackList.Count ? "Black" : "Same");
-        Debug.Log(s);
+        //string s = string.Format("Victory : {0}",whiteList.Count > blackList.Count ? "White" : whiteList.Count < blackList.Count ? "Black" : "Same");
+        //Debug.Log(s);
         //Instantiate(_result, _transform);
     }
-    void InitStone()
-    {
-        int[,] initStone = new int[,] { { 3, 3 }, { 3, 4 }, { 4, 4 }, { 4, 3 } }; // row & col -> mousePos // 흑, 백, 흑, 백
-        float xPos, yPos;
-        xPos = startPos; yPos = lastPos;
-        Vector2 _vector;
-
-        for (int i = 0; i < 4; i++)
-        {
-            float x, y;
-            y = yPos - initStone[i, 0] * interval - (interval / 2);
-            x = xPos + initStone[i, 1] * interval + (interval / 2);
-            _vector = new Vector2(x, y);
-            SetBoardValue(initStone[i, 0], initStone[i, 1], turn);
-            CreateStone(initStone[i, 0], initStone[i, 1]);
-            NextTurn();
-        }
-    }
-    public void OnChangeStone()
+    // 요게 문제
+    public virtual void OnChangeStone(EPlayerType type, int myTurn) // 이게 제일문제네 만들어 놓고 이거 솔직히 말해서 서로 반대라 매니저에서 해야 할 일인데
     {
         if (list.Count <= 0) return;
         /*
@@ -208,68 +176,52 @@ public class OthelloManager : SequenceBoardGame
          * 2. stone change external(외부의)
          */
 
-        List<ConcaveStone> enemyList = (turn -1 == (int)EPlayerType.white) ? blackList : whiteList; // 서로 반대로 해야 됬는데;;
-        Queue<ConcaveStone> enemyQueue = new Queue<ConcaveStone>();
+        //(turn -1 == (int)EPlayerType.white) ? blackList : whiteList; // 서로 반대로 해야 됬는데;;
 
         foreach (var _list in list) // 1.이제 내부의 list걸린 모든 배열 값을 변경해 준다 
         {
-            SetBoardValue(_list.Key, _list.Value, turn);
+            SetBoardValue(_list.Key, _list.Value, myTurn);
         }
         
-        var enemys = enemyList.Where(e => GetBoardValue(e.m_row,e.m_col) == turn);
-
+        var enemys = saveStones.Where(e => GetBoardValue(e.m_row,e.m_col) == myTurn);
+        
         foreach(var enemy in enemys)
         {
-            enemy.turn = turn;
-            enemy.playerType = turn == 1 ? EPlayerType.white : EPlayerType.black;
+            enemy.turn = myTurn;
+            enemy.playerType = type == EPlayerType.white ? EPlayerType.white : EPlayerType.black;
             enemy.SetImageType();
-            enemyQueue.Enqueue(enemy);
-        }
-        while(enemyQueue.Count > 0)
-        {
-            ConcaveStone enemy = enemyQueue.Dequeue();
-
-            if(enemyList == whiteList)
-            {
-                whiteList.Remove(enemy); // white가 바뀔 돌 들이니 whitelist에서 삭제해야 된다
-                blackList.Add(enemy);
-            }
-            else
-            {
-                blackList.Remove(enemy);
-                whiteList.Add(enemy);
-            }
         }
     }
-    public void CreateNumbering()
+    public void CreateNumbering() // 이건 그냥 내가 pos를 계산해서 넣자,,
     {
-        float interval = 0.85f;
-
+        float interval = 0.9f;
+        float constValue = 4f;
+        float startRow = 3.15f;
+        float startCol = -3.15f;
+        // row
         for(int i = 0; i < StaticVariable.othelloBoardNum; i++)
         {
-            GameObject text = Instantiate(numbering,new Vector3(xMidpos[0] - interval,yMidpos[i],0),Quaternion.identity); 
+            GameObject text = Instantiate(numbering,new Vector3(-constValue,startRow,0),Quaternion.identity);
             text.GetComponent<Canvas>().sortingLayerName = "Text";
             Text _text = text.transform.GetChild(0).GetComponent<Text>();
             _text.color = Color.white;
             _text.text = i.ToString();
+            startRow -= interval;
         }
+        // row
         for(int j = 0; j < StaticVariable.othelloBoardNum; j++)
         {
-            GameObject text = Instantiate(numbering,new Vector3(xMidpos[j],yMidpos[0] + interval,0),Quaternion.identity);
+            GameObject text = Instantiate(numbering,new Vector3(startCol, constValue,0),Quaternion.identity);
             text.GetComponent<Canvas>().sortingLayerName = "Text";
             Text _text = text.transform.GetChild(0).GetComponent<Text>();
             _text.color = Color.white;
             _text.text = j.ToString();
+            startCol += interval;
         }
     }
     public void ResetList()
     {
         if(list.Count <= 0) return;
         list.Clear();        
-    }
-
-    public override bool AnalyzeBoard(int r, int c, int turn, int length)
-    {
-        throw new NotImplementedException();
     }
 }

@@ -14,7 +14,6 @@ public abstract class BasePlayer : MonoBehaviour
     protected GameObject stone;
     [SerializeField]
     protected GameObject alertUI;
-    [SerializeField]
     protected Transform parent;
     protected Vector3 putPosition; // 원래 protected
     protected int boardNum;
@@ -23,7 +22,7 @@ public abstract class BasePlayer : MonoBehaviour
     public virtual void IsMouseButtonDown()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        SetStonePosition(mousePosition);
+        GetStonePosition(mousePosition);
     }
     public GameObject CreateAlertUI()
     {
@@ -33,5 +32,6 @@ public abstract class BasePlayer : MonoBehaviour
     {
         return Instantiate(stone,putPosition,Quaternion.identity);
     }
-    public abstract void SetStonePosition(Vector3 mousePosition);
+    public abstract void GetStonePosition(Vector3 mousePosition);
+    public abstract void SetStonePosition();
 }

@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Res_2D_BoardGame;
 
 public class StoneUI : MonoBehaviour
 {
     [SerializeField]
     Button[] stoneButton;
-    
-    LocalOmokManager GameManager;
-    int selectStone;
+    public int selectStone {get; private set; }
     private void Awake() {
-        GameManager = GameObject.Find("GameManager").GetComponent<LocalOmokManager>();
         selectStone = (int)EPlayerType.white;
     }
     private void OnEnable() {
@@ -31,6 +29,5 @@ public class StoneUI : MonoBehaviour
             }
         }
         selectStone = stone;
-        GameManager.playerStoneNum = selectStone;
-    }    
+    }
 }

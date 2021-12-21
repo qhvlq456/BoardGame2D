@@ -151,8 +151,9 @@ RectTransform:
   - {fileID: 1018297188}
   - {fileID: 784477059}
   - {fileID: 348944625}
+  - {fileID: 706695797}
   m_Father: {fileID: 562286939}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -670,7 +671,6 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 706695797}
   - {fileID: 276990787}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -711,8 +711,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1542234249}
-  m_Father: {fileID: 562286939}
-  m_RootOrder: 0
+  m_Father: {fileID: 276990787}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -984,9 +984,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turn: 1
   isGameOver: 0
-  gameStartButton: {fileID: 784477060}
   player: {fileID: 1233552074130937790, guid: 7aa2a2e44eba56e40a95da792af487c2, type: 3}
   enemy: {fileID: 7790049445915881068, guid: 893686330ef58e740ace812fe2a1d030, type: 3}
+  gameMenu: {fileID: 276990786}
   playerStoneNum: 0
   enemyStoneNum: 0
 --- !u!114 &800053133

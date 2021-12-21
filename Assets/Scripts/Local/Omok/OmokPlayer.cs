@@ -16,7 +16,7 @@ public class OmokPlayer : BasePlayer
         xPosition = new float[boardNum];
         yPosition = new float[boardNum];
         SetPlayer();
-        SetPutPos();
+        SetStonePosition();
     }
     public virtual void SetPlayer()
     {
@@ -74,7 +74,7 @@ public class OmokPlayer : BasePlayer
 
         _stone.SetImageType();
     }
-    public void SetPutPos()
+    public override void SetStonePosition()
     {
         float lastPos = 4f; // 앞 뒤 제외하고 [0].x2 ~ [18].x1 까지 가야함        
         float interval = 0.5f;
@@ -96,7 +96,7 @@ public class OmokPlayer : BasePlayer
             currentPos += interval;
         }
     }
-    public override void SetStonePosition(Vector3 mousePosition) // 이거 거꾸로 만들어야 함 ㅋ
+    public override void GetStonePosition(Vector3 mousePosition) // 이거 거꾸로 만들어야 함 ㅋ
     {
         
         float margin = 0.25f; // 순수 계산한거 수치스럽다

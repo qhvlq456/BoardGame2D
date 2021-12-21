@@ -36,13 +36,13 @@ public class LocalOmokManager : OmokManager
         OnGameStart();
     }
     public void OnClickGameStartButton()
-    {
-
-        gameMenu.SetActive(false);
+    {   
+        playerStoneNum = gameMenu.transform.Find("StoneUI").GetComponent<StoneUI>().selectStone;
         enemyStoneNum = playerStoneNum == (int)EPlayerType.white ? (int)EPlayerType.black : (int)EPlayerType.white;
 
         _player = Instantiate(player,new Vector3(0,0,0),Quaternion.identity).GetComponent<OmokPlayer>();
         _enemy = Instantiate(enemy,new Vector3(0,0,0),Quaternion.identity).GetComponent<EnemyOmokPlayer>();
+        gameMenu.SetActive(false);
     }
     public void OnClickBackButton()
     {

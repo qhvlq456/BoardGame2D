@@ -225,15 +225,15 @@ RectTransform:
   m_GameObject: {fileID: 139612941}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0016199, y: 1.0016199, z: 1.0016199}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 163999172}
-  m_Father: {fileID: 562286939}
-  m_RootOrder: 2
+  m_Father: {fileID: 906213107}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -10.016235, y: -10.016113}
+  m_AnchoredPosition: {x: -10.001892, y: -10.000885}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &139612943
@@ -279,7 +279,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 800053132}
         m_MethodName: OnClickBackButton
         m_Mode: 1
         m_Arguments:
@@ -428,7 +428,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 197344721}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -438,7 +438,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -30, y: -15}
+  m_AnchoredPosition: {x: -29.999985, y: -14.999942}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &197344723
@@ -781,7 +781,6 @@ RectTransform:
   m_Children:
   - {fileID: 601679760}
   - {fileID: 197344722}
-  - {fileID: 139612942}
   - {fileID: 906213107}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -870,7 +869,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 601679759}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -880,7 +879,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 30, y: -15}
+  m_AnchoredPosition: {x: 29.999985, y: -14.999942}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &601679761
@@ -1082,7 +1081,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 800053130}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8bc248f6a85ff34d9af60e457434376, type: 3}
+  m_Script: {fileID: 11500000, guid: 218f081f5eba32e4d87bbde92961a09e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   turn: 1
@@ -1091,8 +1090,11 @@ MonoBehaviour:
   blackNumber: {fileID: 907399506}
   numbering: {fileID: 5516415768006514163, guid: 9391b24ff019b8942aed659276d43fcb,
     type: 3}
-  whiteList: []
-  blackList: []
+  saveStones: []
+  player: {fileID: 75738997756275708, guid: ee2ec83c73e7d2c4d878ce89bb5f7aa1, type: 3}
+  enemy: {fileID: 2689761949324328653, guid: 06df0af55c671b3438d1cb3457a23e32, type: 3}
+  playerStoneNum: 0
+  enemyStoneNum: 0
 --- !u!1 &906213106
 GameObject:
   m_ObjectHideFlags: 0
@@ -1124,8 +1126,9 @@ RectTransform:
   - {fileID: 1666592563}
   - {fileID: 944213090}
   - {fileID: 580225031}
+  - {fileID: 139612942}
   m_Father: {fileID: 562286939}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1303,7 +1306,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 800053132}
         m_MethodName: OnClickGameStartButton
         m_Mode: 1
         m_Arguments:
