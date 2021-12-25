@@ -106,7 +106,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if(PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.LoadLevel((string)room.CustomProperties["k"]);
+            PhotonNetwork.LoadLevel((int)room.CustomProperties["gameKind"] + 1); // 아 그냥 string으로 할걸 그랫나 불편하네..
         }
     }
     

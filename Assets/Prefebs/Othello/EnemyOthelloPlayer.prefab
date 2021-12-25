@@ -44,10 +44,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerType: 0
-  stone: {fileID: 737274130589662392, guid: 3f639bacf59e83745a93d348eaaeb491, type: 3}
+  stone: {fileID: 8952802037638206582, guid: 8ab557c6b9ce51a4686804bd181cbe1a, type: 3}
   alertUI: {fileID: 3152705469740071837, guid: c93b2f6bd9d1ec84188162056f8b1c8f, type: 3}
-  parent: {fileID: 0}
   r: 0
   c: 0
   m_turn: 0
-  GameManager: {fileID: 0}

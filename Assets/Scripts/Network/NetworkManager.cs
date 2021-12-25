@@ -28,6 +28,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Button exitButton;
 
     [Header("RoomList")]
+    [SerializeField]
+    Transform roomParent;
     public Dictionary<string,GameObject> m_Dic = new Dictionary<string, GameObject>();
     public bool isConnection;
     int maxRoomCount = 10;
@@ -157,7 +159,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 }
                 else // add
                 {
-                    GameObject createRoom = Instantiate(roomPrefebs,lobbyPanel.transform.Find("RoomEnterPanel").transform);
+                    GameObject createRoom = Instantiate(roomPrefebs,roomParent);
                     createRoom.GetComponent<RoomData>().roomInfo = roomList[i];
                     m_Dic.Add(roomList[i].Name,createRoom);
                 }

@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+public enum EAlertKind
+{
+    Success,
+    Fail,
+    Wait,
+    NextTurn
+}
 public class AlertUI : MonoBehaviour
-{    
-    public enum EAlertKind
-    {
-        Success,
-        Fail,
-        Wait
-
-    }
+{        
     Text m_Text;
     Animator animator;
     public EAlertKind alert;    
@@ -31,16 +31,21 @@ public class AlertUI : MonoBehaviour
             case EAlertKind.Fail :
             m_Text.text = "여기에 돌을 둘 수 없습니다..";
             animator.SetTrigger("Fail");
-            coroutineName = "FailAnimationText";
+            coroutineName = "DisappearAnimationText";
                 break;
             case EAlertKind.Wait :
             m_Text.text = "상대방이 돌을 두는 중입니다";
             coroutineName = "WaitAnimationText";
                 break;
+            case EAlertKind.NextTurn :
+            m_Text.text = "상대방이 돌을 둘 수 없어 다음턴으로 갑니다";
+            animator.SetTrigger("Fail");
+            coroutineName = "DisappearAnimationText";
+                break;
         }
         StartCoroutine(coroutineName,limtedTime);
     }
-    IEnumerator FailAnimationText()
+    IEnumerator DisappearAnimationText()
     {
         while(timer < animator.GetCurrentAnimatorStateInfo(0).length)
         {

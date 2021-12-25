@@ -13,13 +13,26 @@ public class RoomData : MonoBehaviourPun
     [SerializeField]
     Button button;
     public RoomInfo roomInfo {private get; set;}
+    string roomKind;
     private void Awake() {
         OnClickEnterRoom();
     }   
+    private void Start() {
+        SetRoomKind();
+    }
     private void Update()
     {
         titleText.text = 
-        $"{roomInfo.Name} \n GameKind = {roomInfo.CustomProperties["k"]} \n {roomInfo.PlayerCount} / {roomInfo.MaxPlayers}";
+        $"{roomInfo.Name} \n GameKind = {roomKind} \n {roomInfo.PlayerCount} / {roomInfo.MaxPlayers}";
+    }
+    void SetRoomKind()
+    {
+        int kind = (int)roomInfo.CustomProperties["gameKind"];
+        switch(kind)
+        {
+            case 0 : roomKind = "Omok"; break;
+            case 1 : roomKind = "Othello"; break;
+        }
     }
     public void OnClickEnterRoom()
     {

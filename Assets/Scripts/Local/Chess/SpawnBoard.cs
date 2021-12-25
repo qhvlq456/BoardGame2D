@@ -29,7 +29,7 @@ public class SpawnBoard : MonoBehaviour
     }
     void SetSpawnBoard()
     {
-        int _turn = arrivePawn.turn; // 아
+        int _turn = arrivePawn.m_turn; // 아
         int spriteIdx = 0;
         foreach(var button in buttons)
         {
@@ -60,14 +60,14 @@ public class SpawnBoard : MonoBehaviour
     }
     void SetButton(int num)
     {
-        if(GameManager.deathStone[arrivePawn.turn - 1, num] > 0)
+        if(GameManager.deathStone[arrivePawn.m_turn - 1, num] > 0)
         {
             spawnChessStone.InitCreateStone(spawnChessStone.CreateStone(num),
             arrivePawn.m_row,
             arrivePawn.m_col,
-            arrivePawn.turn,
+            arrivePawn.m_turn,
             num);
-            GameManager.deathStone[arrivePawn.turn - 1, num]--; // // death stone--
+            GameManager.deathStone[arrivePawn.m_turn - 1, num]--; // // death stone--
             Destroy(arrivePawn.gameObject); arrivePawn = null;
             Destroy(gameObject);
         }
@@ -82,7 +82,7 @@ public class SpawnBoard : MonoBehaviour
         foreach(var text in texts)
         {
             if(text.name == "Title_Text" || text.name == "Exit_Text") continue;
-            text.text = GameManager.deathStone[arrivePawn.turn - 1,textIdx].ToString();
+            text.text = GameManager.deathStone[arrivePawn.m_turn - 1,textIdx].ToString();
             textIdx++;
         }
     }

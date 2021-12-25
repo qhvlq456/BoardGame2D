@@ -4,29 +4,28 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using Res_2D_BoardGame;
 
 // 여기서 직접 알아서 해야되넹
-public class NetworkConcaveStone : MonoBehaviourPun
+public class NetworkConcaveStone : Stone
 {    
-    PhotonView pv;
-    SpriteRenderer _renderer;
-    OmokManager GameManager;
-    public Sprite[] _sprite;
+    protected PhotonView pv;
+    protected BoardGameBase GameManager;
     public Text _text;
-    void Awake() {
-        SetConcaveStone();
+    public virtual void Awake() {
+        SetStone();
         UpdateText();
         SetTextColor();
-        SetImageStone();
+        SetImageType();
     }
     private void Update() {
         //if(GameManager.isGameOver) Destroy(gameObject);
     }
-    void SetConcaveStone()
+    public virtual void SetStone()
     {
         pv = GetComponent<PhotonView>();
         _renderer = GetComponent<SpriteRenderer>();
-        GameManager = GameObject.Find("GameManager").GetComponent<OmokManager>();
+        GameManager = GameObject.Find("GameManager").GetComponent<BoardGameBase>();
     }
     #region Update Text  
     void UpdateText()
@@ -34,7 +33,7 @@ public class NetworkConcaveStone : MonoBehaviourPun
         ++StaticVariable.sequneceNum;
         _text.text = StaticVariable.sequneceNum.ToString();
     }
-    public void SetTextColor()
+    public virtual void SetTextColor()
     {
         // 1. white = 1, 2. black = 2
         //Debug.LogError($"text color turn = {GameManager.turn}");
@@ -47,7 +46,7 @@ public class NetworkConcaveStone : MonoBehaviourPun
     #endregion
     
     #region Update Image
-    public void SetImageStone()
+    public override void SetImageType()
     {
         // 1. white, 2. black
         //Debug.LogError($"Stone Turn = {GameManager.turn}");

@@ -87,7 +87,7 @@ public class ChessManager : StrategyBoardGame
     
     void CheckObject()
     {
-        if(turn != hit.collider.GetComponent<ChessStone>().turn) return;
+        if(turn != hit.collider.GetComponent<ChessStone>().m_turn) return;
 
         checkObject = hit.collider.gameObject;
         

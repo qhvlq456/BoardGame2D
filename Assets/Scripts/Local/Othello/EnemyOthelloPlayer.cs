@@ -43,10 +43,18 @@ public class EnemyOthelloPlayer : OthelloPlayer
         }
         yield return new WaitForSeconds(1f);
 
+        float waiting = Random.Range(0.4f,0.7f);
+        yield return new WaitForSeconds(waiting);
+
+        
+        waiting = WaitingForAlert(EAlertKind.Wait);
+
+        yield return new WaitForSeconds(waiting);
 
         if (!GameManager.CheckTransferTurn(GameManager.GetTurn()))
         {
-            //GameManager.NextTurn();
+            waiting = WaitingForAlert(EAlertKind.NextTurn,0.5f,0.8f);
+            yield return new WaitForSeconds(waiting);
             Debug.Log("Don't put Stone therefore change turn");
         }
         else
@@ -58,7 +66,7 @@ public class EnemyOthelloPlayer : OthelloPlayer
             putPosition = new Vector3(xPosition[c],yPosition[r],0);
 
             SelectStone(CreateStone(),r,c);
-            GameManager.OnChangeStone(playerType,m_turn);
+            GameManager.ChangeStone(playerType,m_turn);
             GameManager.SetBoardValue(r, c, m_turn);
             GameManager.ResetList();
             GameManager.ChangeStoneNumber();
@@ -71,5 +79,13 @@ public class EnemyOthelloPlayer : OthelloPlayer
             GameManager.NextTurn();
             StartCoroutine(EnemyRoutine());
         }
+    }
+    float WaitingForAlert(EAlertKind kind, float min = 1f, float max = 1.5f)
+    {
+        float waiting = Random.Range(min,max);
+        AlertUI alert = CreateAlertUI().GetComponent<AlertUI>();
+        alert.alert = kind;
+        alert.StartAnimation(waiting);
+        return waiting = Random.Range(waiting + 0.3f,waiting + 0.7f);
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using Res_2D_BoardGame;
 using Photon.Pun;
@@ -12,7 +10,6 @@ public class Result : MonoBehaviourPun
     GameRoomManager gameRoomManager;
     Text titleText, bodyText;
     Button confirmButton;
-    public float maxTime;
     void Awake()
     {
         SetResult();

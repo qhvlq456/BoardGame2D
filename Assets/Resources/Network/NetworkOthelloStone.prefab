@@ -187,11 +187,11 @@ GameObject:
   - component: {fileID: 2650238147210461751}
   - component: {fileID: 8563585938914119188}
   - component: {fileID: 7272376437541645136}
-  - component: {fileID: 1795756314265865302}
   - component: {fileID: 8224185935697919778}
   - component: {fileID: 3602896280254671616}
+  - component: {fileID: 3322442013114139655}
   m_Layer: 0
-  m_Name: NetworkConcaveStone
+  m_Name: NetworkOthelloStone
   m_TagString: ConcaveStone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -280,28 +280,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1795756314265865302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 737274130589662392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 058c892126184164081d5e428deba92e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sprite:
-  - {fileID: 21300000, guid: 01f63c95eb53f3f44834eace33734fa1, type: 3}
-  - {fileID: 21300000, guid: 7f1e5f6cb4ef5b1469324d7570bfd6ba, type: 3}
-  _renderer: {fileID: 8563585938914119188}
-  stoneType: 0
-  m_row: 0
-  m_col: 0
-  m_turn: 0
-  count: 0
-  _text: {fileID: 764333902}
 --- !u!114 &8224185935697919778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -322,6 +300,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 3602896280254671616}
+  - {fileID: 3322442013114139655}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -341,3 +320,25 @@ MonoBehaviour:
   m_SynchronizeRotation: 0
   m_SynchronizeScale: 0
   m_UseLocal: 1
+--- !u!114 &3322442013114139655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737274130589662392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bab9ac30ff54a140a5f6270c64a3c27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sprite:
+  - {fileID: 21300000, guid: 01f63c95eb53f3f44834eace33734fa1, type: 3}
+  - {fileID: 21300000, guid: 7f1e5f6cb4ef5b1469324d7570bfd6ba, type: 3}
+  _renderer: {fileID: 8563585938914119188}
+  stoneType: 0
+  m_row: 0
+  m_col: 0
+  m_turn: 0
+  count: 0
+  _text: {fileID: 764333902}

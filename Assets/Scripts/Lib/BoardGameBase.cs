@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 namespace Res_2D_BoardGame
 {
@@ -238,16 +239,16 @@ namespace Res_2D_BoardGame
         }
     }
 
-    public class Stone : MonoBehaviour
+    public class Stone : MonoBehaviourPun
     {
         // turn == 1 : white , 2 == black
         public Sprite[] _sprite;
         public SpriteRenderer _renderer;
-        public EPlayerType playerType;
+        public EPlayerType stoneType;
         public bool isCheck {get; private set;}
         public int m_row;
         public int m_col;
-        public int turn;
+        public int m_turn;
         public int count;
         public Stone()
         {
@@ -260,11 +261,11 @@ namespace Res_2D_BoardGame
         public virtual void SetImageStone()
         {
             // 1. white, 2. black
-            _renderer.sprite = _sprite[turn - 1]; // 아 이것부터 해결해야 되네..
+            _renderer.sprite = _sprite[m_turn - 1]; // 아 이것부터 해결해야 되네..
         }
-        public void SetImageType()
+        public virtual void SetImageType()
         {
-            _renderer.sprite = _sprite[(int)playerType];
+            _renderer.sprite = _sprite[(int)stoneType];
         }
         
 
@@ -345,7 +346,7 @@ namespace Res_2D_BoardGame
         // 델리게이트 빈거 하나 만들어서 이 부분을 정의하여 새로운 스크립트에 박아둬야 되나;;
         void SequenceLogic(ref int sr, ref int sc, possibleMove action, List<KeyValuePair<int,int>> possiblePos)
         {
-            if(action(sr,sc,turn) < (int)MoveKind.move)
+            if(action(sr,sc,m_turn) < (int)MoveKind.move)
             {
                 sr = m_row; sc = m_col;
                 dirIdx++;
@@ -353,7 +354,7 @@ namespace Res_2D_BoardGame
             else
             {
                 possiblePos.Add(new KeyValuePair<int, int>(sr,sc));
-                if(action(sr,sc,turn) != (int)MoveKind.move)
+                if(action(sr,sc,m_turn) != (int)MoveKind.move)
                 {
                     sr = m_row; sc = m_col;
                     dirIdx++;
@@ -362,7 +363,7 @@ namespace Res_2D_BoardGame
         }
         void UnSequenceLogic(ref int sr, ref int sc, possibleMove action, List<KeyValuePair<int,int>> possiblePos)
         {
-            if(action(sr,sc,turn) >= (int)MoveKind.move)
+            if(action(sr,sc,m_turn) >= (int)MoveKind.move)
             {
                 possiblePos.Add(new KeyValuePair<int, int>(sr,sc));
             }

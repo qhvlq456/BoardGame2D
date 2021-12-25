@@ -39,7 +39,7 @@ public class EnemyOmokPlayer : OmokPlayer
 
         waiting = Random.Range(1.0f,1.5f);
         AlertUI alert = CreateAlertUI().GetComponent<AlertUI>();
-        alert.alert = AlertUI.EAlertKind.Wait;
+        alert.alert = EAlertKind.Wait;
         alert.StartAnimation(waiting);
         waiting = Random.Range(waiting + 0.3f,waiting + 0.7f);
 

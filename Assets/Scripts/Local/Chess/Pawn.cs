@@ -55,11 +55,11 @@ public class Pawn : ChessStone
     }
     void AttackMove()
     {                    
-        int dir = turn == 1 ? -1 : 1;
+        int dir = m_turn == 1 ? -1 : 1;
         int diagonal = -1;
         for(int i = 0; i < 2; i++)
         {
-            if(GameManager.IsPossibleMove(m_row + dir, m_col + diagonal,turn) == (int)MoveKind.enemy)
+            if(GameManager.IsPossibleMove(m_row + dir, m_col + diagonal,m_turn) == (int)MoveKind.enemy)
                 GameManager.moveList.Add(new KeyValuePair<int, int>
                 (m_row + dir, m_col + diagonal));
             diagonal = 1;
@@ -67,9 +67,9 @@ public class Pawn : ChessStone
     }
     void Move()
     {
-        int dir = turn == 1 ? -1 : 1; 
+        int dir = m_turn == 1 ? -1 : 1; 
         // white
-        if(GameManager.IsPossibleMove(m_row + dir, m_col,turn) == (int)MoveKind.move)
+        if(GameManager.IsPossibleMove(m_row + dir, m_col,m_turn) == (int)MoveKind.move)
             GameManager.moveList.Add(new KeyValuePair<int, int>
             (m_row + dir, m_col));
     }
@@ -77,11 +77,11 @@ public class Pawn : ChessStone
     {        
         if(!initPawn) return;
     
-        if(m_row != 6 && turn == 1) 
+        if(m_row != 6 && m_turn == 1) 
         {
             initPawn = false;
         }
-        if(m_row != 1 && turn == 2)
+        if(m_row != 1 && m_turn == 2)
         {
             initPawn = false;
         }
@@ -89,12 +89,12 @@ public class Pawn : ChessStone
     }
     void FirstMove()
     {
-        int dir = turn == 1 ? -1 : 1;
+        int dir = m_turn == 1 ? -1 : 1;
         
         for(int i = 1; i <= 2; i++)
         {                
-            if(GameManager.IsPossibleMove(m_row + (i * dir), m_col,turn) != (int)MoveKind.move) break; // 연속성이 깨짐
-            else if (GameManager.IsPossibleMove(m_row + (i * dir), m_col,turn) == (int)MoveKind.move) 
+            if(GameManager.IsPossibleMove(m_row + (i * dir), m_col,m_turn) != (int)MoveKind.move) break; // 연속성이 깨짐
+            else if (GameManager.IsPossibleMove(m_row + (i * dir), m_col,m_turn) == (int)MoveKind.move) 
             GameManager.moveList.Add(new KeyValuePair<int, int>
             (m_row + (i * dir), m_col));
         }

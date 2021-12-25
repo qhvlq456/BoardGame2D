@@ -49,7 +49,7 @@ public class SpawnChessStone : MonoBehaviour
         ChessStone chessStone = _stone.GetComponent<ChessStone>();
         chessStone.m_row = stoneInfo[0];
         chessStone.m_col = stoneInfo[1];
-        chessStone.turn = stoneInfo[2];
+        chessStone.m_turn = stoneInfo[2];
         chessStone.m_num = stoneInfo[3];
         chessStone.SetImageStone();
     }

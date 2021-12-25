@@ -8,25 +8,34 @@ using System.Collections;
 
 public class GameRoomManager : RoomManager
 {
-    string playerPath;    
+    string[] playerPath = new string[]{
+        "Network/OmokPlayer",
+        "Network/OthelloPlayer"
+    };
     BoardGameBase GameManager;
 
     public override void Awake() {
         base.Awake();
         SetManager();
         PlayerEnter();
-        PhotonNetwork.Instantiate(playerPath,new Vector3(0,0,0),Quaternion.identity);
     }    
+    private void Start() {
+        SpawnGamePlayer();
+    }
     public override void SetManager()
     {
         GameManager = GameObject.Find("GameManager").GetComponent<BoardGameBase>();
-        playerPath = "Network/Player";
     }
     public void GameOver() 
     {
         PhotonNetwork.AutomaticallySyncScene = false; // client의 Scene의 자유를 준다
         SceneManager.LoadScene("Room");
     } // 아 player sequence를 맞춰야되 슈바
+    void SpawnGamePlayer()
+    {
+        int spawnIndex = (int)PhotonNetwork.CurrentRoom.CustomProperties["gameKind"];
+        PhotonNetwork.Instantiate(playerPath[spawnIndex],new Vector3(0,0,0),Quaternion.identity);
+    }
     // [PunRPC]
     // public void RpcPeopleCount()
     // {

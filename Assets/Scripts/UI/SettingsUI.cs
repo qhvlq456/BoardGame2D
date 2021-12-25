@@ -22,7 +22,7 @@ public class SettingsUI : MonoBehaviourPunCallbacks
         base.OnEnable();
         SetButtonColor();
     }
-    public void SetGameKind(int _type)
+    public void OnClickGameKind(int _type)
     {
         type = _type;
         SetButtonColor();
@@ -57,15 +57,16 @@ public class SettingsUI : MonoBehaviourPunCallbacks
     public void CreateRoom()
     {
         if(string.IsNullOrEmpty(roomNameInput.text)) return;
-        else if(type <= -1) return;        
-        string gameKind = type == 0 ? "Omok" : type == 1 ? "Othello" : type == 2 ? "Chess" : "";
-       
+        else if(type <= -1) return;
+        //int gameKind = type == 0 ? "Omok" : type == 1 ? "Othello" : type == 2 ? "Chess" : "";
+        int gameKind = type;
+
         PhotonNetwork.CreateRoom(roomNameInput.text,
         new RoomOptions 
         {
             MaxPlayers = maxPlayer,
-            CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() {{"k",gameKind}},
-            CustomRoomPropertiesForLobby = new string[1] {"k"} // 엄청난 삽질이다 로비에 룸 커스텀 받으려면 스트링으로 키값 셋팅해놔야함
+            CustomRoomProperties = new ExitGames.Client.Photon.Hashtable() {{"gameKind",gameKind}},
+            CustomRoomPropertiesForLobby = new string[1] {"gameKind"} // 엄청난 삽질이다 로비에 룸 커스텀 받으려면 스트링으로 키값 셋팅해놔야함
         }
         , null);
         

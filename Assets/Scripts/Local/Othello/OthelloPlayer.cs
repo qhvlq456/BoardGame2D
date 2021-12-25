@@ -39,16 +39,20 @@ public class OthelloPlayer : BasePlayer
             // r,c 입력했다고 가정
             if (!GameManager.IsEmpty(r,c))
             {
+                GameObject alert = Instantiate(alertUI,parent);
+                alert.GetComponent<AlertUI>().alert = EAlertKind.Fail;
+                alert.GetComponent<AlertUI>().StartAnimation();
                 return;
             }
             else
             {
                 // (int)EPlayerType.white + 1
-                if (!GameManager.CheckTransferTurn(GameManager.GetTurn()))
+                if (!GameManager.CheckTransferTurn(GameManager.GetTurn())) // input밖으로 꺼내야됨ㅋ
                 {
-                    GameManager.NextTurn();
+                    GameObject alert = Instantiate(alertUI,parent);
+                    alert.GetComponent<AlertUI>().alert = EAlertKind.NextTurn;
+                    alert.GetComponent<AlertUI>().StartAnimation();
                     Debug.Log("Don't put Stone therefore change turn");
-                    return;
                 }
                 else
                 {
@@ -57,7 +61,7 @@ public class OthelloPlayer : BasePlayer
                     else
                     {
                         SelectStone(CreateStone(),r,c);
-                        GameManager.OnChangeStone(playerType,m_turn);
+                        GameManager.ChangeStone(playerType,m_turn);
                         GameManager.SetBoardValue(r, c, m_turn);
                         GameManager.ResetList();
                         GameManager.ChangeStoneNumber();
@@ -73,13 +77,10 @@ public class OthelloPlayer : BasePlayer
     public virtual void SelectStone(GameObject stone,int row, int col)
     {
         ConcaveStone _stone = stone.GetComponent<ConcaveStone>();
-        _stone.playerType = playerType;
-        _stone.GetComponent<ConcaveStone>().turn = m_turn;
+        _stone.stoneType = playerType;
+        _stone.GetComponent<ConcaveStone>().m_turn = m_turn;
         _stone.GetComponent<ConcaveStone>().m_row = row;
         _stone.GetComponent<ConcaveStone>().m_col = col;
-        _stone.GetComponent<ConcaveStone>().SetImageType();
-
-        GameManager.saveStones.Add(_stone);
     }  
     public virtual void InitStone()
     {

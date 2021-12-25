@@ -76,6 +76,12 @@ MonoBehaviour:
   - RpcPeopleCount
   - RpcAddPlayerCount
   - RpcSyncScene
+  - RpcModifyStone
+  - RpcChangeStone
+  - Rpctemp
+  - RpcSetStoneType
+  - RpcChangeStoneNumber
+  - RpcModifyStoneNumbering
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

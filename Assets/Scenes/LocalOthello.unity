@@ -1086,8 +1086,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turn: 1
   isGameOver: 0
-  whiteNumber: {fileID: 708178480}
-  blackNumber: {fileID: 907399506}
+  whiteNumberText: {fileID: 708178480}
+  blackNumberText: {fileID: 907399506}
   numbering: {fileID: 5516415768006514163, guid: 9391b24ff019b8942aed659276d43fcb,
     type: 3}
   saveStones: []

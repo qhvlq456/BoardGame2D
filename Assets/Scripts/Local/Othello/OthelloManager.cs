@@ -10,27 +10,29 @@ using Res_2D_BoardGame;
 public class OthelloManager : SequenceBoardGame
 {
     [SerializeField]
-    Text whiteNumber;
+    Text whiteNumberText;
     [SerializeField]
-    Text blackNumber;
+    Text blackNumberText;
     [SerializeField]
     GameObject numbering;    
     GameObject _result;
     Transform _transform;
     protected  List<KeyValuePair<int, int>> list = new List<KeyValuePair<int, int>>();
-    public List<ConcaveStone> saveStones = new List<ConcaveStone>();
+    public List<Stone> saveStones = new List<Stone>();
 
-    void Start()
+    private void Awake()     
     {
         OnGameStart();
     }
-    
+    private void Update() {
+        ChangeStoneNumber();
+    }
     public void ChangeStoneNumber()
     {
-        var w_count = saveStones.Where(e => e.playerType == EPlayerType.white);
-        var b_count = saveStones.Where(e => e.playerType == EPlayerType.black);
-        whiteNumber.text = w_count.Count().ToString();
-        blackNumber.text = b_count.Count().ToString();
+        var w_count = saveStones.Where(e => e.stoneType == EPlayerType.white);
+        var b_count = saveStones.Where(e => e.stoneType == EPlayerType.black);
+        whiteNumberText.text = w_count.Count().ToString();
+        blackNumberText.text = b_count.Count().ToString();
     
     }
     public override bool AnalyzeBoard(int r, int c, int length = 0)
@@ -164,10 +166,11 @@ public class OthelloManager : SequenceBoardGame
     {
         //string s = string.Format("Victory : {0}",whiteList.Count > blackList.Count ? "White" : whiteList.Count < blackList.Count ? "Black" : "Same");
         //Debug.Log(s);
-        //Instantiate(_result, _transform);
+        Instantiate(_result, _transform);
     }
     // 요게 문제
-    public virtual void OnChangeStone(EPlayerType type, int myTurn) // 이게 제일문제네 만들어 놓고 이거 솔직히 말해서 서로 반대라 매니저에서 해야 할 일인데
+    // 솔직히 이거 왜 만들었을까 이럴거면
+    public virtual void ChangeStone(EPlayerType type, int myTurn) // 이게 제일문제네 만들어 놓고 이거 솔직히 말해서 서로 반대라 매니저에서 해야 할 일인데
     {
         if (list.Count <= 0) return;
         /*
@@ -187,9 +190,9 @@ public class OthelloManager : SequenceBoardGame
         
         foreach(var enemy in enemys)
         {
-            enemy.turn = myTurn;
-            enemy.playerType = type == EPlayerType.white ? EPlayerType.white : EPlayerType.black;
-            enemy.SetImageType();
+            enemy.m_turn = myTurn;
+            enemy.stoneType = type == EPlayerType.white ? EPlayerType.white : EPlayerType.black;
+            //enemy.SetImageType(); 
         }
     }
     public void CreateNumbering() // 이건 그냥 내가 pos를 계산해서 넣자,,

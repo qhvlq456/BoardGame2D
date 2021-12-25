@@ -38,7 +38,7 @@ public class OmokPlayer : BasePlayer
             if(!GameManager.IsEmpty(r,c) || (r <= -1 || c <= -1))
             {
                 AlertUI alert = CreateAlertUI().GetComponent<AlertUI>();
-                alert.GetComponent<AlertUI>().alert = AlertUI.EAlertKind.Fail;
+                alert.GetComponent<AlertUI>().alert = EAlertKind.Fail;
                 alert.StartAnimation();
                 return;
             }
@@ -69,8 +69,8 @@ public class OmokPlayer : BasePlayer
 
         _stone.m_row = r;
         _stone.m_col = c;
-        _stone.turn = m_turn;
-        _stone.playerType = playerType;
+        _stone.m_turn = m_turn;
+        _stone.stoneType = playerType;
 
         _stone.SetImageType();
     }
